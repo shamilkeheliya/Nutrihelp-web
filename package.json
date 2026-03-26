@@ -4,7 +4,7 @@
   "description": "These instructions will get you a copy of the web frontend up and running on your local machine for development and \r testing purposes.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "react-scripts test --watchAll=false",
     "start": "set NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
     "build": "react-scripts build"
   },

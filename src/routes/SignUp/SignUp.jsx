@@ -6,6 +6,7 @@ import signupImage from "../../images/Nutrihelp.jpg";
 import logoImage from "../../images/logos_black_icon.png";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
+import { toast } from "react-toastify";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
