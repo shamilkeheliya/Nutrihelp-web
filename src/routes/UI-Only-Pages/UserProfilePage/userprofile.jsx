@@ -1,7 +1,13 @@
   "use client"
 
-  import { useMemo, useRef, useState, useEffect } from "react"
+  import { useContext, useMemo, useRef, useState, useEffect } from "react"
+  import { ArrowRight, KeyRound, ShieldCheck, TimerReset } from "lucide-react"
+  import { useNavigate } from "react-router-dom"
+  import { toast } from "react-toastify"
   import profileLogo from "./NutriHelp-logos_black.png"
+  import { UserContext } from "../../../context/user.context"
+  import { supabase } from "../../../supabaseClient"
+  import ChangePasswordModal from "./ChangePasswordModal"
 
 
   /* ============ CONSTANTS ============ */
@@ -19,8 +25,6 @@
     lastName: "",
     email: "",
     phone: "",
-    password: "",
-    confirm: "",
     goals: [],
     avatar: null,
   }
@@ -210,6 +214,138 @@
     background: "#1e54d9",
   })
 
+  const getPasswordPanelStyles = (width) => ({
+    position: "relative",
+    overflow: "hidden",
+    borderRadius: width < 768 ? 18 : 24,
+    padding: width < 768 ? "22px 18px" : width < 1024 ? "30px 24px" : "34px 30px",
+    border: "1px solid rgba(30, 64, 175, 0.28)",
+    background:
+      "linear-gradient(136deg, #0f172a 0%, #1d4ed8 52%, #0f766e 128%)",
+    boxShadow: "0 20px 46px rgba(15, 23, 42, 0.28)",
+    display: "grid",
+    gridTemplateColumns:
+      width < 980 ? "1fr" : "minmax(0, 1.3fr) minmax(260px, 0.7fr)",
+    gap: width < 980 ? 20 : 24,
+    color: "#f8fafc",
+  })
+
+  const getPasswordOrbStyles = (position) => ({
+    position: "absolute",
+    width: position === "top" ? 220 : 260,
+    height: position === "top" ? 220 : 260,
+    borderRadius: "50%",
+    pointerEvents: "none",
+    zIndex: 0,
+    top: position === "top" ? -90 : "auto",
+    right: position === "top" ? -70 : "auto",
+    left: position === "bottom" ? -100 : "auto",
+    bottom: position === "bottom" ? -120 : "auto",
+    background:
+      position === "top"
+        ? "radial-gradient(circle, rgba(165, 180, 252, 0.32), rgba(165, 180, 252, 0))"
+        : "radial-gradient(circle, rgba(45, 212, 191, 0.24), rgba(45, 212, 191, 0))",
+  })
+
+  const getPasswordContentStyles = () => ({
+    position: "relative",
+    zIndex: 1,
+  })
+
+  const getPasswordBadgeStyles = () => ({
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    borderRadius: 999,
+    border: "1px solid rgba(191, 219, 254, 0.35)",
+    background: "rgba(15, 23, 42, 0.2)",
+    color: "rgba(219, 234, 254, 0.98)",
+    fontSize: 12,
+    fontWeight: 700,
+    padding: "6px 12px",
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    marginBottom: 14,
+  })
+
+  const getPasswordHeadingStyles = (width) => ({
+    margin: 0,
+    fontSize: width < 768 ? 34 : width < 1024 ? 40 : 46,
+    lineHeight: 1.08,
+    letterSpacing: "-0.02em",
+    fontWeight: 800,
+    color: "#f8fafc",
+    fontFamily: "\"Sora\", \"Poppins\", sans-serif",
+  })
+
+  const getPasswordDescriptionStyles = (width) => ({
+    margin: "16px 0 0",
+    maxWidth: 720,
+    color: "rgba(226, 232, 240, 0.95)",
+    fontSize: width < 768 ? 15 : 18,
+    lineHeight: 1.55,
+    fontWeight: 500,
+    fontFamily: "\"Manrope\", \"Poppins\", sans-serif",
+  })
+
+  const getPasswordActionStyles = (width, hovered, disabled) => ({
+    marginTop: width < 768 ? 20 : 24,
+    minHeight: width < 768 ? 50 : 56,
+    padding: width < 768 ? "0 20px" : "0 26px",
+    borderRadius: 14,
+    border: "1px solid rgba(255,255,255,0.3)",
+    background: disabled
+      ? "linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%)"
+      : hovered
+      ? "linear-gradient(135deg, #ffffff 0%, #dbeafe 100%)"
+      : "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+    color: disabled ? "#475569" : "#0f172a",
+    fontSize: width < 768 ? 16 : 17,
+    fontWeight: 800,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    width: width < 768 ? "100%" : "auto",
+    cursor: disabled ? "not-allowed" : "pointer",
+    boxShadow: disabled
+      ? "none"
+      : hovered
+      ? "0 14px 28px rgba(30, 64, 175, 0.36)"
+      : "0 12px 22px rgba(15, 23, 42, 0.24)",
+    transform: hovered && !disabled ? "translateY(-2px)" : "translateY(0)",
+    transition: "all 0.2s ease",
+  })
+
+  const getPasswordMetaStyles = (width) => ({
+    position: "relative",
+    zIndex: 1,
+    display: "grid",
+    gap: 12,
+    marginTop: width < 980 ? 0 : 18,
+  })
+
+  const getPasswordMetaItemStyles = () => ({
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    borderRadius: 12,
+    padding: "11px 12px",
+    border: "1px solid rgba(191, 219, 254, 0.28)",
+    background: "rgba(15, 23, 42, 0.24)",
+    color: "rgba(239, 246, 255, 0.98)",
+    fontSize: 13,
+    fontWeight: 600,
+    fontFamily: "\"Manrope\", \"Poppins\", sans-serif",
+  })
+
+  const getPasswordWarningStyles = () => ({
+    marginTop: 10,
+    color: "#fef08a",
+    fontSize: 13,
+    fontWeight: 600,
+  })
+
   /* ============ CUSTOM RADIO STYLES ============ */
 
 const getRadioWrapStyles = () => ({
@@ -247,20 +383,50 @@ const getRadioInnerStyles = (checked) => ({
     const [form, setForm] = useState(INITIAL_FORM)
     const [touched, setTouched] = useState({})
     const [hoveredButton, setHoveredButton] = useState(null)
+    const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false)
     const fileRef = useRef(null)
+    const navigate = useNavigate()
+    const { currentUser, logOut, setCurrentUser } = useContext(UserContext)
+
+    const storedSession = useMemo(() => {
+      try {
+        const raw = localStorage.getItem("user_session")
+        return raw ? JSON.parse(raw) : null
+      } catch (_error) {
+        return null
+      }
+    }, [currentUser, isChangePasswordOpen])
+
+    const currentUserId =
+      currentUser?.id ||
+      currentUser?.user_id ||
+      storedSession?.id ||
+      storedSession?.user_id ||
+      ""
+
+    const authToken =
+      localStorage.getItem("auth_token") ||
+      localStorage.getItem("jwt_token") ||
+      currentUser?.token ||
+      storedSession?.token ||
+      ""
 
   useEffect(() => {
   const fetchProfile = async () => {
     try {
       const sessionRaw = localStorage.getItem("user_session")
-      const token = localStorage.getItem("jwt_token")
+      const parsedSession = sessionRaw ? JSON.parse(sessionRaw) : null
+      const token =
+        localStorage.getItem("auth_token") ||
+        localStorage.getItem("jwt_token") ||
+        parsedSession?.token
 
-      if (!sessionRaw || !token) {
+      if (!parsedSession || !token) {
         console.warn("JWT token missing")
         return
       }
 
-      const session = JSON.parse(sessionRaw)
+      const session = parsedSession
 
       const res = await fetch("http://localhost:80/api/profile", {
         method: "GET",
@@ -311,8 +477,6 @@ const getRadioInnerStyles = (checked) => ({
       if (touched.firstName && !form.firstName) e.firstName = "Required"
       if (touched.email && !emailOk(form.email)) e.email = "Invalid email"
       if (touched.phone && !phoneOk(form.phone)) e.phone = "Invalid phone"
-      if (touched.password && form.password.length < 6) e.password = "Min 6 chars"
-      if (touched.confirm && form.confirm !== form.password) e.confirm = "Mismatch"
       return e
     }, [form, touched])
 
@@ -327,16 +491,38 @@ const getRadioInnerStyles = (checked) => ({
       mark("email")
       mark("phone")
       if (Object.keys(errors).length === 0) {
-        alert("Changes saved!")
+        toast.success("Profile changes saved.")
       }
     }
 
-    const handleUpdatePassword = () => {
-      mark("password")
-      mark("confirm")
-      if (Object.keys(errors).length === 0) {
-        alert("Password updated!")
+    const completeLogoutAndRedirect = async () => {
+      try {
+        await supabase.auth.signOut()
+      } catch (_error) {
+        // Ignore Supabase sign-out errors and continue local/session cleanup.
       }
+
+      localStorage.removeItem("auth_token")
+      localStorage.removeItem("jwt_token")
+      localStorage.removeItem("user_session")
+
+      if (typeof logOut === "function") {
+        logOut()
+      } else if (typeof setCurrentUser === "function") {
+        setCurrentUser(null)
+      }
+
+      navigate("/login", { replace: true })
+    }
+
+    const handlePasswordUpdated = async () => {
+      toast.success("Password changed successfully. Please sign in again.")
+      await completeLogoutAndRedirect()
+    }
+
+    const handlePasswordSessionExpired = async (message) => {
+      toast.info(message || "Session expired. Please sign in again.")
+      await completeLogoutAndRedirect()
     }
 
     return (
@@ -446,40 +632,71 @@ const getRadioInnerStyles = (checked) => ({
             </section>
 
             {/* Your Password Section */}
-            <section style={getCardStyles(width)}>
-              <h2 style={getTitleStyles(width)}>Your Password</h2>
+            <section style={getPasswordPanelStyles(width)}>
+              <div style={getPasswordOrbStyles("top")} />
+              <div style={getPasswordOrbStyles("bottom")} />
 
-              <div style={getGrid2Styles(width)}>
-                <FormField
-                  label="New Password"
-                  type="password"
-                  value={form.password}
-                  onChange={(v) => set("password", v)}
-                  onBlur={() => mark("password")}
-                  error={touched.password ? errors.password : undefined}
-                  width={width}
-                />
-                <FormField
-                  label="Repeat New Password"
-                  type="password"
-                  value={form.confirm}
-                  onChange={(v) => set("confirm", v)}
-                  onBlur={() => mark("confirm")}
-                  error={touched.confirm ? errors.confirm : undefined}
-                  width={width}
-                />
+              <div style={getPasswordContentStyles()}>
+                <div style={getPasswordBadgeStyles()}>
+                  <ShieldCheck size={14} />
+                  Account Security
+                </div>
+
+                <h2 style={getPasswordHeadingStyles(width)}>Your Password</h2>
+
+                <p style={getPasswordDescriptionStyles(width)}>
+                  Guard your account with a secure 2-step password update flow.
+                  First verify your current password, then set a stronger new one
+                  with real-time validation.
+                </p>
+
+                <button
+                  style={getPasswordActionStyles(
+                    width,
+                    hoveredButton === "changePassword",
+                    !currentUserId
+                  )}
+                  onMouseEnter={() => setHoveredButton("changePassword")}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  onClick={() => setIsChangePasswordOpen(true)}
+                  disabled={!currentUserId}
+                >
+                  Change Password
+                  <ArrowRight size={18} />
+                </button>
+
+                {!currentUserId ? (
+                  <div style={getPasswordWarningStyles()}>
+                    Unable to load your account session. Please sign in again.
+                  </div>
+                ) : null}
               </div>
 
-              <button
-                style={hoveredButton === "password" ? getButtonHoverStyles(width) : getButtonStyles(width)}
-                onMouseEnter={() => setHoveredButton("password")}
-                onMouseLeave={() => setHoveredButton(null)}
-                onClick={handleUpdatePassword}
-              >
-                Update Password
-              </button>
+              <div style={getPasswordMetaStyles(width)}>
+                <div style={getPasswordMetaItemStyles()}>
+                  <KeyRound size={16} />
+                  Current password verification gate
+                </div>
+                <div style={getPasswordMetaItemStyles()}>
+                  <ShieldCheck size={16} />
+                  Inline strength and mismatch checks
+                </div>
+                <div style={getPasswordMetaItemStyles()}>
+                  <TimerReset size={16} />
+                  Session protection after update
+                </div>
+              </div>
             </section>
           </main>
+
+          <ChangePasswordModal
+            isOpen={isChangePasswordOpen}
+            onRequestClose={() => setIsChangePasswordOpen(false)}
+            userId={currentUserId}
+            authToken={authToken}
+            onPasswordUpdated={handlePasswordUpdated}
+            onSessionExpired={handlePasswordSessionExpired}
+          />
         </div>
       </div>
     )
