@@ -94,13 +94,13 @@ button {
 }
 
 .food-item {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   padding: 10px;
   margin: 10px;
   border-radius: 8px;
   box-shadow: var(--card-shadow);
   width: 300px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .food-item h2 {

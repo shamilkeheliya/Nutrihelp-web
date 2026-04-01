@@ -6,14 +6,14 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: var(--background-color);
-  color: var(--text-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
   min-height: 100vh;
 }
 
 .dark-mode .health-news-container {
-  background-color: var(--background-color);
-  color: var(--text-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
 }
 
 
@@ -105,13 +105,13 @@
 .search-section {
   margin-bottom: 30px;
   padding: 20px;
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   border-radius: 15px;
   box-shadow: var(--card-shadow);
 }
 
 .dark-mode .search-section {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   box-shadow: var(--card-shadow);
 }
 
@@ -176,13 +176,13 @@
 .filter-section {
   margin-bottom: 30px;
   padding: 20px;
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   border-radius: 15px;
   box-shadow: var(--card-shadow);
 }
 
 .dark-mode .filter-section {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   box-shadow: var(--card-shadow);
 }
 
@@ -221,7 +221,7 @@
   gap: 15px;
   margin-bottom: 30px;
   padding: 20px;
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   border-radius: 15px;
   box-shadow: var(--card-shadow);
   flex-wrap: wrap;
@@ -229,7 +229,7 @@
 }
 
 .dark-mode .news-categories {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   box-shadow: var(--card-shadow);
 }
 
@@ -237,7 +237,7 @@
   padding: 10px 20px;
   background-color: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -248,18 +248,18 @@
 .dark-mode .news-categories button {
   background-color: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
 }
 
 .news-categories button:hover {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   color: var(--button-text);
   transform: translateY(-2px);
   box-shadow: var(--card-shadow-hover);
 }
 
 .news-categories button.active {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   color: var(--button-text);
   box-shadow: var(--card-shadow-hover);
 }
@@ -282,12 +282,12 @@
 
 /* News Card */
 .news-card {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   border-radius: 15px;
   overflow: hidden;
   box-shadow: var(--card-shadow);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
 }
@@ -311,13 +311,13 @@
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 15px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   line-height: 1.4;
   flex: 1;
 }
 
 .dark-mode .news-card-content h3 {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .news-card-actions {
@@ -380,9 +380,9 @@
 }
 
 .dark-mode .news-card {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   box-shadow: var(--card-shadow);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
 }
 
 .news-card:hover {
@@ -405,12 +405,12 @@
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 10px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   line-height: 1.4;
 }
 
 .dark-mode .news-title {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .news-excerpt {
@@ -494,7 +494,7 @@
   padding: 10px 15px;
   background-color: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -505,18 +505,18 @@
 .dark-mode .page-button {
   background-color: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
 }
 
 .page-button:hover {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   color: var(--button-text);
   transform: translateY(-2px);
   box-shadow: var(--card-shadow-hover);
 }
 
 .page-button.active {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   color: var(--button-text);
   box-shadow: var(--card-shadow-hover);
 }
@@ -525,7 +525,7 @@
   padding: 10px 15px;
   background-color: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -534,16 +534,16 @@
 .dark-mode .pagination-button {
   background-color: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
 }
 
 .pagination-button:hover {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   color: var(--button-text);
 }
 
 .pagination-button.active {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   color: var(--button-text);
 }
 
@@ -558,20 +558,20 @@
   justify-content: center;
   align-items: center;
   min-height: 300px;
-  background-color: var(--background-color);
-  color: var(--text-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .loading-container {
-  background-color: var(--background-color);
-  color: var(--text-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
 }
 
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid var(--border-color);
-  border-top: 4px solid var(--primary-color);
+  border: 4px solid var(--color-border);
+  border-top: 4px solid var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -585,16 +585,16 @@
 .error-container {
   text-align: center;
   padding: 40px;
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   border-radius: 15px;
   box-shadow: var(--card-shadow);
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .error-container {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   box-shadow: var(--card-shadow);
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .error-message {
@@ -839,7 +839,7 @@
 
 .slider-category-badge {
   display: inline-block;
-  background: var(--primary-color);
+  background: var(--color-primary);
   color: white;
   padding: 5px 15px;
   border-radius: 20px;
@@ -897,7 +897,7 @@
 }
 
 .dot.active {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   transform: scale(1.2);
 }
 
@@ -916,7 +916,7 @@
   border-radius: 50%;
   background-color: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -929,11 +929,11 @@
 .dark-mode .slider-arrow-btn {
   background-color: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
 }
 
 .slider-arrow-btn:hover {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   color: var(--button-text);
   transform: translateY(-2px);
   box-shadow: var(--card-shadow-hover);
@@ -943,16 +943,16 @@
 .test-api-section {
   margin: 40px 0;
   padding: 30px;
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   border-radius: 15px;
   box-shadow: var(--card-shadow);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
 }
 
 .dark-mode .test-api-section {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   box-shadow: var(--card-shadow);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
 }
 
 .test-badge {
@@ -971,11 +971,11 @@
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 10px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .test-title {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .test-description {
@@ -1080,8 +1080,8 @@
 .spinner {
   width: 20px;
   height: 20px;
-  border: 2px solid var(--border-color);
-  border-top: 2px solid var(--primary-color);
+  border: 2px solid var(--color-border);
+  border-top: 2px solid var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -1096,18 +1096,18 @@
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .results-header h4 {
   font-size: 1.3rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 .dark-mode .results-header h4 {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .results-count {
@@ -1127,8 +1127,8 @@
 }
 
 .test-result-card {
-  background-color: var(--card-background-secondary);
-  border: 1px solid var(--border-color);
+  background-color: var(--card-card-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 0;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -1155,8 +1155,8 @@
 }
 
 .dark-mode .test-result-card {
-  background-color: var(--card-background-secondary);
-  border-color: var(--border-color);
+  background-color: var(--card-card-secondary);
+  border-color: var(--color-border);
 }
 
 .test-result-card:hover {
@@ -1181,19 +1181,19 @@
 .result-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   margin: 0;
   flex: 1;
   line-height: 1.4;
 }
 
 .dark-mode .result-title {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .result-number {
   background-color: #005BBB;
-  color: var(--border-color);
+  color: var(--color-border);
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 0.8rem;
@@ -1351,15 +1351,15 @@
 /* High Contrast Mode */
 @media (prefers-contrast: high) {
   .news-card {
-    border: 2px solid var(--text-primary);
+    border: 2px solid var(--color-text-primary);
   }
   
   .search-input,
   .filter-select {
-    border: 2px solid var(--text-primary);
+    border: 2px solid var(--color-text-primary);
   }
   
   .pagination-button {
-    border: 2px solid var(--text-primary);
+    border: 2px solid var(--color-text-primary);
   }
 }

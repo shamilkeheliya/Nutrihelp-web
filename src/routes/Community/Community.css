@@ -1,6 +1,6 @@
 .community-page {
   min-height: 100vh;
-  background-color: var(--background-color);
+  background-color: var(--color-bg-page);
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
@@ -8,7 +8,7 @@
 }
 
 .community-page.dark-mode {
-  background-color: var(--background-color);
+  background-color: var(--color-bg-page);
 }
 
 .community-container {
@@ -42,7 +42,7 @@
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 10px;
-  color: var(--primary-color);
+  color: var(--color-primary);
   background: none;
   -webkit-background-clip: initial;
   -webkit-text-fill-color: initial;
@@ -50,7 +50,7 @@
 }
 
 .dark-mode .community-title {
-  color: var(--primary-color);
+  color: var(--color-primary);
   background: none;
   -webkit-background-clip: initial;
   -webkit-text-fill-color: initial;
@@ -73,7 +73,7 @@
   align-items: center;
   gap: 10px;
   padding: 15px 25px;
-  background: var(--primary-color);
+  background: var(--color-primary);
   color: white;
   border: none;
   border-radius: 50px;
@@ -545,7 +545,7 @@ width: 100%;
 
 .category-weight-loss {
  background: rgba(0, 91, 187, 0.12) !important;
-  color: var(--primary-color) !important;
+  color: var(--color-primary) !important;
   border: 1px solid rgba(0, 91, 187, 0.25) !important;
 }
 
@@ -553,21 +553,21 @@ width: 100%;
 
 .category-fitness {
 background: rgba(0, 91, 187, 0.12) !important;
-  color: var(--primary-color) !important;
+  color: var(--color-primary) !important;
   border: 1px solid rgba(0, 91, 187, 0.25) !important;
 }
 
 
 .category-dietary-restrictions {
   background: rgba(0, 91, 187, 0.12) !important;
-  color: var(--primary-color) !important;
+  color: var(--color-primary) !important;
   border: 1px solid rgba(0, 91, 187, 0.25) !important;
 }
 
 
 .category-meal-prep {
   background: rgba(0, 91, 187, 0.12) !important;
-  color: var(--primary-color) !important;
+  color: var(--color-primary) !important;
   border: 1px solid rgba(0, 91, 187, 0.25) !important;
 }
 
@@ -575,7 +575,7 @@ background: rgba(0, 91, 187, 0.12) !important;
 
 .category-nutrition-tips {
   background: rgba(0, 91, 187, 0.12) !important;
-  color: var(--primary-color) !important;
+  color: var(--color-primary) !important;
   border: 1px solid rgba(0, 91, 187, 0.25) !important;
 }
 

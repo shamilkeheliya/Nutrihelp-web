@@ -16,8 +16,8 @@
   flex-direction: column;
   width: 100%;
   max-width: 1200px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   min-height: 100vh;
-  background-color: var(--background-color);
+  background-color: var(--color-bg-page);
   box-sizing: border-box;
 }

@@ -14,37 +14,37 @@
 }
 
 .api-status-message.api-success {
-  background-color: color-mix(in srgb, var(--success-color) 20%, var(--card-background));
+  background-color: color-mix(in srgb, var(--success-color) 20%, var(--card-card));
   color: var(--success-color);
   border: 1px solid var(--success-color);
 }
 
 .api-status-message.api-error {
-  background-color: color-mix(in srgb, var(--error-color) 20%, var(--card-background));
+  background-color: color-mix(in srgb, var(--error-color) 20%, var(--card-card));
   color: var(--error-color);
   border: 1px solid var(--error-color);
 }
 
 .api-status-message.api-loading {
-  background-color: color-mix(in srgb, var(--info-color) 20%, var(--card-background));
+  background-color: color-mix(in srgb, var(--info-color) 20%, var(--card-card));
   color: var(--info-color);
   border: 1px solid var(--info-color);
 }
 
 .dark-mode .api-status-message.api-success {
-  background-color: color-mix(in srgb, var(--success-color) 25%, var(--card-background));
+  background-color: color-mix(in srgb, var(--success-color) 25%, var(--card-card));
   color: var(--success-color);
   border-color: var(--success-color);
 }
 
 .dark-mode .api-status-message.api-error {
-  background-color: color-mix(in srgb, var(--error-color) 25%, var(--card-background));
+  background-color: color-mix(in srgb, var(--error-color) 25%, var(--card-card));
   color: var(--error-color);
   border-color: var(--error-color);
 }
 
 .dark-mode .api-status-message.api-loading {
-  background-color: color-mix(in srgb, var(--info-color) 25%, var(--card-background));
+  background-color: color-mix(in srgb, var(--info-color) 25%, var(--card-card));
   color: var(--info-color);
   border-color: var(--info-color);
 }
@@ -62,8 +62,8 @@
 
 .settings-page {
   min-height: 100vh;
-  background-color: var(--background-color);
-  color: var(--text-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
   padding: 20px;
 }
@@ -71,7 +71,7 @@
 .settings-container {
   max-width: 1500px;
   margin: 0 auto;
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   border-radius: 20px;
   box-shadow: var(--card-shadow);
   overflow: hidden;
@@ -105,8 +105,8 @@
 }
 
 .settings-page.dark-mode .settings-content {
-  background-color: var(--card-background);
-  color: var(--text-primary);
+  background-color: var(--card-card);
+  color: var(--color-text-primary);
 }
 
 /* Quick Actions styles removed */
@@ -115,31 +115,31 @@
   scroll-margin-top: 90px;
   margin-bottom: 40px;
   padding: 30px;
-  background-color: var(--card-background-secondary);
+  background-color: var(--card-card-secondary);
   border-radius: 15px;
   box-shadow: var(--card-shadow);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   transition: all 0.3s ease;
 }
 
 .settings-page.dark-mode .settings-section {
-  background-color: var(--card-background-secondary);
+  background-color: var(--card-card-secondary);
   box-shadow: var(--card-shadow);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
 }
 
 .section-title {
   font-size: 1.2rem !important;
   font-weight: 600;
   margin-bottom: 15px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
 .settings-page.dark-mode .section-title {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .section-description {
@@ -176,9 +176,9 @@
   justify-content: center;
   gap: 8px;
   padding: 10px 20px;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-border);
   border-radius: 8px;
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   color: var(--text-color);
   cursor: pointer;
   font-size: 14px;
@@ -187,13 +187,13 @@
 }
 
 .mode-button:hover {
-  border-color: var(--primary-color);
-  background-color: color-mix(in srgb, var(--primary-color) 10%, var(--card-background));
+  border-color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 10%, var(--card-card));
 }
 
 .mode-button.active {
-  border-color: var(--primary-color);
-  background-color: var(--primary-color);
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
   color: white;
 }
 
@@ -212,26 +212,26 @@
 
 .font-size-option {
   padding: 15px;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-border);
   border-radius: 10px;
   background-color: var(--background-secondary);
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-size: 16px !important;
   line-height: 1.4 !important;
 }
 
 .font-size-option:hover {
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
   transform: translateY(-2px);
   box-shadow: var(--card-shadow-hover);
 }
 
 .font-size-option.selected {
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
   background-color: var(--primary-light);
   color: var(--primary-dark);
   box-shadow: 0 0 15px rgba(168, 47, 234, 0.2);
@@ -245,11 +245,11 @@
 }
 
 .dark-mode .font-size-option {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .font-size-option.selected {
-  background-color: color-mix(in srgb, var(--primary-color) 25%, var(--card-background));
+  background-color: color-mix(in srgb, var(--color-primary) 25%, var(--card-card));
   color: white;
   box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
 }
@@ -257,7 +257,7 @@
 .font-size-preview {
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   opacity: 0.9;
   display: block;
   margin-top: 8px;
@@ -295,13 +295,13 @@
   padding: 20px;
   background-color: var(--background-tertiary);
   border-radius: 10px;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-border);
 }
 
 .preview-title {
   font-weight: 600;
   margin-bottom: 15px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-size: 1.1rem;
 }
 
@@ -324,7 +324,7 @@
   justify-content: space-between !important;
   gap: 12px;
   padding: 15px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border);
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
@@ -333,7 +333,7 @@
 /*
 May Not need it but can be added for asthetics 
 .checkbox-group:hover {
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
   transform: translateY(-2px);
   box-shadow: var(--card-shadow-hover);
 } */
@@ -390,7 +390,7 @@ May Not need it but can be added for asthetics
 .checkbox-input {
   width: 20px;
   height: 20px;
-  accent-color: var(--primary-color);
+  accent-color: var(--color-primary);
   cursor: pointer;
   margin-top: 2px;
   flex-shrink: 0;
@@ -398,7 +398,7 @@ May Not need it but can be added for asthetics
 
 .checkbox-label {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   cursor: pointer;
   flex: 1;
   margin-bottom: 5px;
@@ -425,7 +425,7 @@ May Not need it but can be added for asthetics
   padding: 15px 20px;
   background-color: var(--background-secondary);
   border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
 }
 
 .notification-status {
@@ -448,10 +448,10 @@ May Not need it but can be added for asthetics
 
 .action-btn {
   padding: 8px 16px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   background-color: var(--background-primary);
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
@@ -459,9 +459,9 @@ May Not need it but can be added for asthetics
 }
 
 .action-btn:hover {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   color: white;
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
   transform: translateY(-1px);
 }
 
@@ -493,29 +493,29 @@ May Not need it but can be added for asthetics
   padding-right: 40px;
   font-size: 16px;
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   background-color: var(--background-secondary);
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-border);
   border-radius: 5px !important;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .language-dropdown:hover {
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
   box-shadow: 0 2px 8px rgba(0, 91, 187, 0.1);
 }
 
 .language-dropdown:focus {
   outline: none;
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(0, 91, 187, 0.1);
 }
 
 .language-dropdown option {
   padding: 10px;
   background-color: var(--background-secondary);
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 
@@ -544,7 +544,7 @@ May Not need it but can be added for asthetics
 
 .slider-label span {
   padding: 4px 12px;
-  color: var(--primary-color);
+  color: var(--color-primary);
   border-radius: 20px;
   font-size: 14px;
   font-weight: 600;
@@ -555,13 +555,13 @@ May Not need it but can be added for asthetics
   padding: 20px;
   background-color: var(--background-tertiary);
   border-radius: 10px;
-  border: 2px dashed var(--border-color);
+  border: 2px dashed var(--color-border);
   text-align: center;
   transition: all 0.3s ease;
 }
 
 .voice-test-section:hover {
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
   background-color: var(--background-secondary);
 }
 
@@ -570,7 +570,7 @@ May Not need it but can be added for asthetics
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  background: linear-gradient(135deg, var(--color-primary), var(--primary-dark));
   color: white;
   border: none;
   border-radius: 25px;
@@ -585,7 +585,7 @@ May Not need it but can be added for asthetics
 .test-voice-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(168, 47, 234, 0.4);
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  background: linear-gradient(135deg, var(--primary-dark), var(--color-primary));
 }
 
 .test-voice-btn:disabled {
@@ -623,7 +623,7 @@ May Not need it but can be added for asthetics
   justify-content: center;
   margin-top: 40px;
   padding-top: 30px;
-  border-top: 2px solid var(--border-color);
+  border-top: 2px solid var(--color-border);
 }
 
 .cancel-btn {
@@ -714,14 +714,14 @@ May Not need it but can be added for asthetics
   align-items: center;
   justify-content: center;
   min-height: 300px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid var(--border-color);
-  border-top: 4px solid var(--primary-color);
+  border: 4px solid var(--color-border);
+  border-top: 4px solid var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;
@@ -736,7 +736,7 @@ May Not need it but can be added for asthetics
 .error-content {
   text-align: center;
   padding: 40px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .error-content h2 {
@@ -1334,25 +1334,25 @@ May Not need it but can be added for asthetics
 /* High Contrast Mode */
 @media (prefers-contrast: high) {
   .settings-section {
-    border: 2px solid var(--text-primary);
+    border: 2px solid var(--color-text-primary);
   }
   
   .font-size-option {
-    border: 2px solid var(--text-primary);
+    border: 2px solid var(--color-text-primary);
   }
   
   .checkbox-group {
-    border: 2px solid var(--text-primary);
+    border: 2px solid var(--color-text-primary);
   }
   
   .language-option {
-    border: 2px solid var(--text-primary);
+    border: 2px solid var(--color-text-primary);
   }
   
   /* Action button high contrast styles removed */
   
   .cancel-btn,
   .save-settings-btn {
-    border: 2px solid var(--text-primary);
+    border: 2px solid var(--color-text-primary);
   }
 }

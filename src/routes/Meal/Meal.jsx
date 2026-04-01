@@ -382,7 +382,7 @@ const Meal = () => {
                     background: "var(--background-secondary)",
                     borderRadius: "12px",
                     padding: "16px",
-                    border: "1px solid var(--border-color)",
+                    border: "1px solid var(--color-border)",
                   }}
                 >
                   <h2 style={{ 
@@ -390,7 +390,7 @@ const Meal = () => {
                     marginTop: 0, 
                     fontSize: "clamp(1.125rem, 4vw, 1.75rem)", 
                     lineHeight: 1.3,
-                    color: "var(--text-primary)"
+                    color: "var(--color-text-primary)"
                   }}>
                     🎯 Personalized Weekly Plan
                   </h2>

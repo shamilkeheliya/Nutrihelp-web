@@ -8,8 +8,8 @@
 }
 
 .result-card-simple {
-    background-color: var(--card-background, white);
-    border: 1px solid var(--border-color, #ccc);
+    background-color: var(--card-card, white);
+    border: 1px solid var(--color-border, #ccc);
     border-radius: 12px;
     padding: 30px;
     width: 100%;
@@ -34,7 +34,7 @@
 .result-label {
     font-weight: 700;
     font-size: 1.1rem;
-    color: var(--text-primary, #333);
+    color: var(--color-text-primary, #333);
 }
 
 .result-value {

@@ -49,7 +49,7 @@
 }
 .week-card-active{
   background: var(--glass-background-dark, rgba(67, 65, 65, 0.2)) !important;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-weight: bolder;
   font-size: x-large;
   padding: 0.5rem 1rem;
@@ -101,7 +101,7 @@
 .day-btn.active {
   background: var(--glass-background-dark, rgba(67, 65, 65, 0.2)) !important;
   /* background: linear-gradient(44deg, #7B44FF 0%, #F26CBA 100%) !important; */
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .content-grid {
@@ -115,7 +115,7 @@
 .card {
   display: inline-block;
   background: var(--glass-background, rgba(255,255,255,0.2)) !important;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   padding: 20px;
   border-radius: 1rem;
   font-weight: 500;
@@ -167,7 +167,7 @@
   top: 170px;
   right: 90px;
   width: 250px;
-  background: var(--card-background);
+  background: var(--card-card);
   backdrop-filter: blur(6px);
   padding: 1rem;
   border-radius: 12px;
@@ -178,7 +178,7 @@
 .stats-panel h2 {
   font-size: 1.2rem;
   margin-bottom: 0.8rem;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .progress-bar {
@@ -203,7 +203,7 @@
   width: 250px;
   margin-top: 1rem;
   text-align: center;
-   background: var(--card-background);
+   background: var(--card-card);
   backdrop-filter: blur(6px);
   padding: 1rem;
   border-radius: 12px;
@@ -228,6 +228,6 @@
   margin-top: 0.3rem;
   font-size: 0.8rem;
   font-weight: bold;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 

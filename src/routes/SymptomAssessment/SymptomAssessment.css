@@ -33,7 +33,7 @@
   .hero-text p {
     font-size: 1.35rem;  
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--color-text-primary);
     margin-bottom: 1.5rem;
   }
    

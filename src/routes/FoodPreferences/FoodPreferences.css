@@ -1,12 +1,12 @@
 :root {
-  --fp-primary: var(--primary-color, #005bbb);
+  --fp-primary: var(--color-primary, #005bbb);
   --fp-primary-light: var(--primary-light, rgba(0, 91, 187, 0.12));
-  --fp-bg: var(--background-color, #f7fbff);
-  --fp-surface: var(--card-background-color, #ffffff);
+  --fp-bg: var(--color-bg-page, #f7fbff);
+  --fp-surface: var(--card-card-color, #ffffff);
   --fp-surface-2: var(--food-preferences-box-background-color, #ffffff);
-  --fp-text: var(--text-primary, #0f172a);
+  --fp-text: var(--color-text-primary, #0f172a);
   --fp-text-2: var(--text-secondary, #475569);
-  --fp-border: var(--border-color-secondary, rgba(15, 23, 42, 0.10));
+  --fp-border: var(--color-border-secondary, rgba(15, 23, 42, 0.10));
   --fp-shadow: var(--card-shadow, 0 10px 26px rgba(2, 6, 23, 0.08));
   --fp-shadow-hover: var(--card-shadow-hover, 0 16px 36px rgba(2, 6, 23, 0.12));
 }
@@ -526,7 +526,7 @@ button:focus-visible,
   --fp-text: var(--dark-text-primary, #e5e7eb);
   --fp-text-2: var(--dark-text-secondary, #a1a1aa);
   --fp-border: var(--dark-border-color, rgba(148, 163, 184, 0.18));
-  --fp-primary: var(--primary-color, #3b82f6);
+  --fp-primary: var(--color-primary, #3b82f6);
 }
 
 .dark-mode .purple-box,
@@ -644,30 +644,30 @@ button:focus-visible,
     radial-gradient(1000px 420px at 10% 0%, rgba(100, 80, 180, 0.15), transparent 60%),
     radial-gradient(1000px 420px at 90% 0%, rgba(80, 40, 160, 0.12), transparent 60%),
     var(--background-secondary);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
 }
 
 .dark-mode .white-card {
-  background: linear-gradient(var(--card-background), var(--card-background)) padding-box,
+  background: linear-gradient(var(--card-card), var(--card-card)) padding-box,
               linear-gradient(135deg, rgba(100, 80, 180, 0.2), rgba(120, 100, 200, 0.2)) border-box;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3);
 }
 
 .dark-mode .white-card h3 {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .item-card {
-  border-bottom-color: var(--border-color);
+  border-bottom-color: var(--color-border);
 }
 
 .dark-mode .item-card:hover {
-  background: linear-gradient(180deg, var(--background-hover), var(--card-background));
+  background: linear-gradient(180deg, var(--background-hover), var(--card-card));
 }
 
 .dark-mode .details strong {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .details p {
@@ -676,12 +676,12 @@ button:focus-visible,
 
 .dark-mode .item-icon {
   background: var(--background-secondary);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
 }
 
 .dark-mode .slider {
-  background: var(--border-color);
-  border-color: var(--border-color);
+  background: var(--color-border);
+  border-color: var(--color-border);
 }
 
 .dark-mode .tag {
@@ -691,24 +691,24 @@ button:focus-visible,
 }
 
 .dark-mode .checkbox-row {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .add-box {
-  background: linear-gradient(135deg, var(--card-background), var(--background-secondary));
-  border-color: var(--border-color);
+  background: linear-gradient(135deg, var(--card-card), var(--background-secondary));
+  border-color: var(--color-border);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
 }
 
 .dark-mode .add-box-input {
   background: var(--input-background);
-  border-color: var(--border-color);
-  color: var(--text-primary);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .save-btn-wrapper {
   background: linear-gradient(to top, rgba(18, 18, 18, 0.95), rgba(18, 18, 18, 0));
-  border-top-color: var(--border-color);
+  border-top-color: var(--color-border);
 }
 
 .dark-mode .section-heading h1 {
@@ -716,7 +716,7 @@ button:focus-visible,
 }
 
 .dark-mode .section-heading .subtitle {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .section-heading p {

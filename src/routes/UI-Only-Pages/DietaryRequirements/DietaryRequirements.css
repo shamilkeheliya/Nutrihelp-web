@@ -284,7 +284,7 @@
       flex-direction: column;
       align-items: flex-start;
       padding: 0px;
-      background-color: var(--card-background);
+      background-color: var(--card-card);
       border-radius: 10px;
       box-shadow: var(--card-shadow);
     }
@@ -297,7 +297,7 @@
     
     .form-group h3 {
       margin-bottom: 10px;
-      color: var(--text-primary);
+      color: var(--color-text-primary);
     }
     
     .selpre {
@@ -311,7 +311,7 @@
       padding: 10px 15px;
       margin-bottom: 5px;
       cursor: pointer;
-      color: var(--text-primary);
+      color: var(--color-text-primary);
     }
     
     .close-icon {
@@ -361,7 +361,7 @@
     .select h4 {
       text-align: center;
       margin-bottom : 10px;
-      color: var(--text-primary);
+      color: var(--color-text-primary);
     }
     
     .mainpre +.pref-img {
@@ -383,7 +383,7 @@
       font-family: 'Lato', sans-serif;
       box-sizing: border-box;
       background-color: var(--input-background);
-      color: var(--text-primary);
+      color: var(--color-text-primary);
     }
     
     .search-bar::-webkit-input-placeholder {
@@ -403,23 +403,23 @@
     }
     
     .search-bar:focus {
-      border-bottom: 1px solid var(--text-primary);
+      border-bottom: 1px solid var(--color-text-primary);
     }
     
     .search-bar:focus::-webkit-input-placeholder {
-      color: var(--text-primary);
+      color: var(--color-text-primary);
     }
     
     .search-bar:focus::-moz-placeholder {
-      color: var(--text-primary);
+      color: var(--color-text-primary);
     }
     
     .search-bar:focus:-ms-input-placeholder {
-      color: var(--text-primary);
+      color: var(--color-text-primary);
     }
     
     .search-bar:focus:-moz-placeholder {
-      color: var(--text-primary);
+      color: var(--color-text-primary);
     }
   
   .buttonpre.btn-pre,
@@ -438,7 +438,7 @@
     background-color: var(--background-secondary);
     position: relative;
     cursor: pointer;
-    color: var(--text-primary);
+    color: var(--color-text-primary);
   }
   
   .selected-option::before {

@@ -1,6 +1,6 @@
 body {
   font-family: "Montserrat", sans-serif;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 a {
@@ -28,17 +28,17 @@ h6 {
   height: calc(100vh - 78px);
   overflow-y: scroll;
   scrollbar-width: thin;
-  scrollbar-color: var(--primary-color) var(--background-color);
-  background-color: var(--background-color);
+  scrollbar-color: var(--color-primary) var(--color-bg-page);
+  background-color: var(--color-bg-page);
 }
 
 .account,
 .titleInput {
   box-shadow: var(--box-shadow-light);
-  background: var(--card-background);
+  background: var(--card-card);
   border-radius: 20px;
   padding: 20px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
 }
 
 .account > .title {
@@ -46,11 +46,11 @@ h6 {
   display: flex;
   justify-content: space-between;
   transition: all 0.3s ease-in-out;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .account > .title:hover {
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 .account .message {
@@ -78,7 +78,7 @@ h6 {
 }
 
 .account .message:hover > .left {
-  background: var(--primary-color);
+  background: var(--color-primary);
   color: var(--text-inverse);
 }
 

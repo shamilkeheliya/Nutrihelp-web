@@ -1,12 +1,12 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: var(--background-color);
+  background-color: var(--color-bg-page);
   margin: 0;
 }
 
 
 header {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   color: var(--text-inverse);
   padding: 10px;
   text-align: center;
@@ -39,7 +39,7 @@ border-radius: 10px;
 }
 
 .food-item {
-background: var(--card-background);
+background: var(--card-card);
 width: calc(33.33% - 20px); 
 min-width: 220px;
 border-radius: 12px;
@@ -58,7 +58,7 @@ transform: translateY(-5px);
 margin-top: 10px;
 font-weight: 600;
 font-size: 1rem;
-color: var(--text-primary);
+color: var(--color-text-primary);
 }
 
 .mealcontainer {
@@ -128,11 +128,11 @@ background-color: var(--primary-dark);
 
 h3{
 margin-left: 30px; font-size: 1.25rem;
-color: var(--text-primary);
+color: var(--color-text-primary);
 }
 
 .selected {
-  border: 2px solid var(--primary-color);            
+  border: 2px solid var(--color-primary);            
   background-color: var(--primary-light);             
   box-shadow: 0px 0px 12px rgba(0, 91, 187, 0.3); 
 }
@@ -141,7 +141,7 @@ color: var(--text-primary);
 margin-left: 40px;
 font-size: 1.5rem;
 font-weight: 600;
-color: var(--text-primary);
+color: var(--color-text-primary);
 width: fit-content;
 padding: 5px 10px;
 border-radius: 8px;
@@ -155,7 +155,7 @@ color: var(--text-inverse);
 }
 
 .meal-header {
-background-color: var(--primary-color) !important; 
+background-color: var(--color-primary) !important; 
 background-image: none !important;    
 animation: none !important;           
 color: var(--text-inverse) !important;              
@@ -193,7 +193,7 @@ position: relative;
 
 /* Toggle Weekly Plan Button */
 .toggle-weekly-btn {
-  background: var(--primary-color);
+  background: var(--color-primary);
   color: var(--text-inverse);
   border: none;
   padding: 12px 28px;
@@ -239,9 +239,9 @@ position: relative;
   margin: 20px auto 10px;
   padding: 20px 22px;
   border-radius: 16px;
-  background: var(--card-background);            
-  color: var(--text-primary);                    
-  border: 1px solid var(--primary-color);        
+  background: var(--card-card);            
+  color: var(--color-text-primary);                    
+  border: 1px solid var(--color-primary);        
   box-shadow: var(--card-shadow);
 }
 
@@ -251,7 +251,7 @@ position: relative;
   font-weight: 800;
   font-size: clamp(1.125rem, 4vw, 1.75rem) !important;
   line-height: 1.3;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .personalize-grid {
@@ -275,17 +275,17 @@ position: relative;
 .personalize-input {
   appearance: none;
   background: var(--input-background);            
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   border-radius: 12px;
   padding: 10px 12px;
   font-size: 1rem;
   outline: none;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   transition: box-shadow .15s ease, border-color .15s ease;
 }
 
 .personalize-input:focus {
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.18);
 }
 
@@ -297,8 +297,8 @@ position: relative;
 
 .chip {
   background: var(--primary-light);
-  color: var(--text-primary) !important;
-  border: 1px solid var(--primary-color);
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-primary);
   border-radius: 999px;
   padding: 8px 14px;
   font-size: 0.875rem;
@@ -313,7 +313,7 @@ position: relative;
 }
 
 .chip--active {
-  background: var(--primary-color);
+  background: var(--color-primary);
   color: var(--text-inverse) !important;
   border-color: transparent;
 }
@@ -365,8 +365,8 @@ position: relative;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: var(--background-color);
-  color: var(--text-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
   min-height: 100vh;
 }*/
 
@@ -374,8 +374,8 @@ position: relative;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: var(--background-color);
-  color: var(--text-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
   min-height: 100vh;
 }
 
@@ -388,8 +388,8 @@ position: relative;
 }
 
 .dark-mode .meal-container {
-  background-color: var(--background-color);
-  color: var(--text-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
 }
 
 /* Header Section */
@@ -428,25 +428,25 @@ position: relative;
 .meal-plan-section {
   margin-bottom: 40px;
   padding: 30px;
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   border-radius: 20px;
   box-shadow: var(--card-shadow);
 }
 
 .dark-mode .meal-plan-section {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   box-shadow: var(--card-shadow);
 }
 
 .section-title {
   font-size: clamp(1.5rem, 3.5vw, 2rem);
   margin-bottom: 20px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-weight: 600;
 }
 
 .dark-mode .section-title {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .section-description {
@@ -470,7 +470,7 @@ position: relative;
 
 /* Food Item Card */
 .food-item {
-  background-color: var(--card-background-secondary);
+  background-color: var(--card-card-secondary);
   border-radius: 15px;
   padding: 25px;
   box-shadow: var(--card-shadow);
@@ -482,7 +482,7 @@ position: relative;
 }
 
 .dark-mode .food-item {
-  background-color: var(--card-background-secondary);
+  background-color: var(--card-card-secondary);
   box-shadow: var(--card-shadow);
 }
 
@@ -498,7 +498,7 @@ position: relative;
 }
 
 .dark-mode .food-item.selected {
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
   background-color: var(--primary-light);
   box-shadow: 0 0 20px rgba(168, 47, 234, 0.3);
 }
@@ -516,11 +516,11 @@ position: relative;
   font-size: clamp(1.2rem, 3vw, 1.4rem);
   font-weight: 600;
   margin-bottom: 10px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .food-item-title {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .food-item-description {
@@ -550,22 +550,22 @@ position: relative;
 
 .nutrition-label {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-size: 0.9rem;
 }
 
 .dark-mode .nutrition-label {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .nutrition-value {
-  color: var(--primary-color);
+  color: var(--color-primary);
   font-weight: 700;
   font-size: 1rem;
 }
 
 .dark-mode .nutrition-value {
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 /* Selection Indicator */
@@ -576,7 +576,7 @@ position: relative;
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -636,19 +636,19 @@ position: relative;
 .btn-secondary {
   background-color: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-border);
 }
 
 .dark-mode .btn-secondary {
   background-color: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
 }
 
 .btn-secondary:hover {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   color: var(--button-text);
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
   transform: translateY(-2px);
 }
 
@@ -656,27 +656,27 @@ position: relative;
 .nutrition-summary {
   margin-top: 40px;
   padding: 25px;
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   border-radius: 15px;
   box-shadow: var(--card-shadow);
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-border);
 }
 
 .dark-mode .nutrition-summary {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   box-shadow: var(--card-shadow);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
 }
 
 .summary-title {
   font-size: clamp(1.3rem, 3vw, 1.5rem);
   margin-bottom: 20px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-weight: 600;
 }
 
 .dark-mode .summary-title {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .nutrition-grid {
@@ -693,31 +693,31 @@ position: relative;
   padding: 15px;
   background-color: var(--background-secondary);
   border-radius: 10px;
-  border-left: 4px solid var(--primary-color);
+  border-left: 4px solid var(--color-primary);
 }
 
 .dark-mode .nutrition-item {
   background-color: var(--background-secondary);
-  border-left-color: var(--primary-color);
+  border-left-color: var(--color-primary);
 }
 
 .nutrition-name {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .nutrition-name {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .nutrition-amount {
-  color: var(--primary-color);
+  color: var(--color-primary);
   font-weight: 700;
   font-size: 1.1rem;
 }
 
 .dark-mode .nutrition-amount {
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 /* Progress Bar */
@@ -730,11 +730,11 @@ position: relative;
   justify-content: space-between;
   margin-bottom: 8px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .progress-label {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .progress-bar {
@@ -770,24 +770,24 @@ position: relative;
   max-width: 400px;
   width: 90%;
   text-align: center;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-border);
 }
 
 .dark-mode .motivational-popup {
   background-color: var(--modal-background);
   box-shadow: var(--dropdown-shadow);
-  border-color: var(--border-color);
+  border-color: var(--color-border);
 }
 
 .popup-title {
   font-size: 1.5rem;
   margin-bottom: 15px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-weight: 600;
 }
 
 .dark-mode .popup-title {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .popup-message {
@@ -826,20 +826,20 @@ position: relative;
   justify-content: center;
   align-items: center;
   min-height: 300px;
-  background-color: var(--background-color);
-  color: var(--text-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .loading-container {
-  background-color: var(--background-color);
-  color: var(--text-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
 }
 
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid var(--border-color);
-  border-top: 4px solid var(--primary-color);
+  border: 4px solid var(--color-border);
+  border-top: 4px solid var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -853,16 +853,16 @@ position: relative;
 .error-container {
   text-align: center;
   padding: 40px;
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   border-radius: 15px;
   box-shadow: var(--card-shadow);
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .dark-mode .error-container {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   box-shadow: var(--card-shadow);
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .error-message {
@@ -1167,19 +1167,19 @@ position: relative;
 /* High Contrast Mode */
 @media (prefers-contrast: high) {
   .food-item {
-    border: 2px solid var(--text-primary);
+    border: 2px solid var(--color-text-primary);
   }
   
   .food-item.selected {
-    border: 3px solid var(--primary-color);
+    border: 3px solid var(--color-primary);
   }
   
   .nutrition-summary {
-    border: 2px solid var(--text-primary);
+    border: 2px solid var(--color-text-primary);
   }
   
   .btn {
-    border: 2px solid var(--text-primary);
+    border: 2px solid var(--color-text-primary);
   }
 }
 

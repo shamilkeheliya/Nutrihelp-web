@@ -6,8 +6,8 @@
   margin-right: auto;
   padding: 20px;
   font-family: "Arial", sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
 }
 
 .start-container{
@@ -31,7 +31,7 @@
 .faq-category-title {
   font-size: 1.8rem;
   color: var(--faq-title-color);
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   padding: 15px 20px;
   border-radius: 5px;
   display: flex;
@@ -44,7 +44,7 @@
 }
 
 .faq-category-title.expanded, .faq-category-toggle.expanded {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   color: var(--text-inverse);
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
@@ -57,8 +57,8 @@
 
 /* FAQ Item */
 .faq-item {
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
+  background-color: var(--card-card);
+  border: 1px solid var(--color-border);
   border-radius: 5px;
   margin-bottom: 10px;
   overflow: hidden;
@@ -66,7 +66,7 @@
 }
 
 .faq-item.active {
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
 }
 
 /* FAQ Question */
@@ -106,7 +106,7 @@
   padding: 15px 20px;
   opacity: 1;
   background-color: var(--background-secondary);
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--color-border);
 }
 
 /* FAQ Toggle */
@@ -167,7 +167,7 @@
   height: 200px;
   padding: 10px;
   font-size: 1rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   resize: none;
   margin-bottom: 15px;
@@ -179,7 +179,7 @@
 }
 
 .feedback-textarea:focus {
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
 }
 
 /* 提交按钮样式 */

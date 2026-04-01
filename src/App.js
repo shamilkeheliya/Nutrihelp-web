@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 import { initializeFontSize } from "./utils/fontSizeManager";
-import "./styles/global-dark-mode.css";
+import './styles/global.css';
 
 import {
   BrowserRouter as Router,

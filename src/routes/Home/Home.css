@@ -1,13 +1,13 @@
 /* == Base == */
 .home {
   font-family: "Montserrat", sans-serif;
-  color: var(--text-primary);
-  background: var(--background-color);
+  color: var(--color-text-primary);
+  background: var(--color-bg-page);
 }
 
 .home-dark {
-  background: var(--background-color);
-  color: var(--text-primary);
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
 }
 
 .home-container {
@@ -44,7 +44,7 @@ textarea:focus {
   border-radius: 14px;
   border: none;
   cursor: pointer;
-  background: var(--primary-color);
+  background: var(--color-primary);
   color: var(--text-inverse);
   font-size: 1.05rem;
   font-weight: 600;
@@ -85,7 +85,7 @@ textarea:focus {
   font-size: 2.3rem;
   font-weight: 800;
   margin: 0 0 12px 0;
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 .section-lead {
@@ -102,7 +102,7 @@ textarea:focus {
 /* == Hero == */
 .home-hero {
   padding: 78px 0;
-  background: linear-gradient(135deg, var(--accent-color), var(--background-color));
+  background: linear-gradient(135deg, var(--accent-color), var(--color-bg-page));
 }
 
 .home-hero-inner {
@@ -152,7 +152,7 @@ textarea:focus {
 /* == About == */
 .home-about {
   padding: 84px 0;
-  background: var(--background-color);
+  background: var(--color-bg-page);
 }
 
 .home-dark .home-about {
@@ -195,16 +195,16 @@ textarea:focus {
   padding: 18px;
   border-radius: 16px;
   background: var(--hover-background);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
 }
 
 .home-dark .about-feature {
-  background: var(--card-background);
-  border-color: var(--border-color);
+  background: var(--card-card);
+  border-color: var(--color-border);
 }
 
 .about-feature svg {
-  color: var(--primary-color);
+  color: var(--color-primary);
   margin-top: 2px;
 }
 
@@ -212,7 +212,7 @@ textarea:focus {
   margin: 0 0 6px 0;
   font-size: 1.2rem;
   font-weight: 800;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .about-feature p {
@@ -228,7 +228,7 @@ textarea:focus {
 /* == Services == */
 .home-services {
   padding: 84px 0;
-  background: var(--background-color);
+  background: var(--color-bg-page);
 }
 
 .home-dark .home-services {
@@ -244,14 +244,14 @@ textarea:focus {
 .service-card {
   border-radius: 18px;
   overflow: hidden;
-  background: var(--card-background);
-  border: 1px solid var(--border-color);
+  background: var(--card-card);
+  border: 1px solid var(--color-border);
   box-shadow: var(--card-shadow);
 }
 
 .home-dark .service-card {
-  background: var(--card-background);
-  border-color: var(--border-color);
+  background: var(--card-card);
+  border-color: var(--color-border);
 }
 
 .service-card-btn {
@@ -273,14 +273,14 @@ textarea:focus {
 
 .service-body {
   padding: 18px 18px 20px 18px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .service-title {
   margin: 0 0 8px 0;
   font-size: 1.25rem;
   font-weight: 900;
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 .service-desc {
@@ -298,7 +298,7 @@ textarea:focus {
 .service-cta {
   display: inline-block;
   font-weight: 800;
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 .home-dark .service-cta {
@@ -324,24 +324,24 @@ textarea:focus {
 }
 
 .review-card {
-  background: var(--card-background);
+  background: var(--card-card);
   border-radius: 18px;
   padding: 24px;
   text-align: center;
   box-shadow: var(--card-shadow-hover);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
 }
 
 .review-card-dark {
-  background: var(--card-background);
-  border-color: var(--border-color);
+  background: var(--card-card);
+  border-color: var(--color-border);
 }
 
 .review-avatar {
   width: 84px;
   height: 84px;
   border-radius: 999px;
-  border: 3px solid var(--border-color);
+  border: 3px solid var(--color-border);
   object-fit: cover;
 }
 
@@ -349,7 +349,7 @@ textarea:focus {
   margin: 14px 0 6px 0;
   font-size: 1.2rem;
   font-weight: 900;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .review-rating {
@@ -370,7 +370,7 @@ textarea:focus {
 /* == Contact == */
 .home-contact {
   padding: 84px 0;
-  background: var(--background-color);
+  background: var(--color-bg-page);
 }
 
 .home-dark .home-contact {
@@ -396,16 +396,16 @@ textarea:focus {
   padding: 18px;
   border-radius: 16px;
   background: var(--hover-background);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
 }
 
 .home-dark .contact-info-card {
-  background: var(--card-background);
-  border-color: var(--border-color);
+  background: var(--card-card);
+  border-color: var(--color-border);
 }
 
 .contact-info-card svg {
-  color: var(--primary-color);
+  color: var(--color-primary);
   margin-top: 3px;
 }
 
@@ -413,7 +413,7 @@ textarea:focus {
   margin: 0 0 6px 0;
   font-size: 1.1rem;
   font-weight: 900;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .contact-info-card p {
@@ -428,34 +428,34 @@ textarea:focus {
 .contact-form {
   padding: 20px;
   border-radius: 18px;
-  background: var(--card-background);
-  border: 1px solid var(--border-color);
+  background: var(--card-card);
+  border: 1px solid var(--color-border);
   box-shadow: var(--card-shadow);
   display: grid;
   gap: 12px;
 }
 
 .home-dark .contact-form {
-  background: var(--card-background);
-  border-color: var(--border-color);
+  background: var(--card-card);
+  border-color: var(--color-border);
 }
 
 .contact-form input,
 .contact-form textarea {
   min-height: 48px;
   border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   padding: 12px 14px;
   font-size: 1rem;
   background: var(--input-background);
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .home-dark .contact-form input,
 .home-dark .contact-form textarea {
   background: var(--input-background);
-  border-color: var(--border-color);
-  color: var(--text-primary);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
 .contact-form textarea {
@@ -466,13 +466,13 @@ textarea:focus {
 /* == Footer == */
 .home-footer {
   padding: 48px 0;
-  background: var(--background-color);
-  border-top: 1px solid var(--border-color);
+  background: var(--color-bg-page);
+  border-top: 1px solid var(--color-border);
 }
 
 .home-dark .home-footer {
   background: var(--background-secondary);
-  border-top-color: var(--border-color);
+  border-top-color: var(--color-border);
 }
 
 .footer-inner {
@@ -502,9 +502,9 @@ textarea:focus {
   align-items: center;
   justify-content: center;
   background: var(--hover-background);
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   text-decoration: none;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
 }
 
 .footer-social a:hover {
@@ -512,9 +512,9 @@ textarea:focus {
 }
 
 .home-dark .footer-social a {
-  background: var(--card-background);
-  color: var(--text-primary);
-  border-color: var(--border-color);
+  background: var(--card-card);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
 }
 
 .footer-follow {
@@ -544,7 +544,7 @@ textarea:focus {
 }
 
 .footer-detail-row svg {
-  color: var(--primary-color);
+  color: var(--color-primary);
   margin-top: 2px;
 }
 
@@ -552,7 +552,7 @@ textarea:focus {
   margin: 0 0 8px 0;
   font-size: 1.2rem;
   font-weight: 900;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .footer-newsletter p {
@@ -575,17 +575,17 @@ textarea:focus {
   min-width: 220px;
   min-height: 48px;
   border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   padding: 12px 14px;
   font-size: 1rem;
   background: var(--input-background);
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .home-dark .newsletter-form input {
   background: var(--input-background);
-  border-color: var(--border-color);
-  color: var(--text-primary);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
 /* == Floating Assistant == */
@@ -602,10 +602,10 @@ textarea:focus {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: var(--card-background);
-  color: var(--text-primary);
+  background: var(--card-card);
+  color: var(--color-text-primary);
   box-shadow: var(--card-shadow-hover);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
 }
 
 .assistant-btn:hover {

@@ -45,7 +45,7 @@
 }
 
 .content-container {
-  background-color: var(--card-background);
+  background-color: var(--card-card);
   padding: 20px;
   margin-top: 40px;
   border-radius: 8px;
@@ -85,7 +85,7 @@
 }
 
 .label3 .text-wrapper3 {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-family: "Poppins-Medium", Helvetica;
   font-size: 16px;
   font-weight: 500;
