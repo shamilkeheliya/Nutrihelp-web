@@ -1,124 +1,151 @@
 // script.js
 
-document.addEventListener("DOMContentLoaded", function () {
-  const dietInput = document.getElementById("diet-input");
-  const dietList = document.getElementById("diet-list");
+import React, { useEffect, useState } from "react";
+import { FaEdit } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { getProfile, updateProfile } from "../services/profileService";
 
-  dietInput.addEventListener("focus", function () {
-    dietList.style.display = "block";
-  });
+const Profile = () => {
+  const [profile, setProfile] = useState({});
+  const [formData, setFormData] = useState({});
+  const [editMode, setEditMode] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  dietInput.addEventListener("blur", function () {
-    // Delay hiding the dropdown to allow click events on options to trigger
-    setTimeout(function () {
-      dietList.style.display = "none";
-    }, 200); // Adjust the delay time as needed
-  });
+  // Load profile
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
-  // Move the click event listeners outside the focus event listeners
-  var options = Array.from(dietList.getElementsByTagName("li"));
-  let interestButtons = document.querySelectorAll(".sel");
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      const data = await getProfile();
 
-  options.forEach((option) => {
-    option.addEventListener("click", function () {
-      dietInput.value = option.textContent;
-      var selectedText = $(this).text();
-      if ($(".sel:contains(" + selectedText + ")").length === 0) {
-        var newButton = $(
-          '<button class="sel new-sel">' + selectedText + "</button>"
-        );
-        newButton.css("margin", "5px");
-        newButton.addClass("selected");
-        $("#sd").append(newButton);
-        newButton.click(function () {
-          event.preventDefault();
-          $(this).remove();
-          console.log("New button clicked: " + selectedText);
-        });
-      }
-      dietList.style.display = "none"; // Hide the dropdown after selection
+      setProfile(data);
+      setFormData(data);
+    } catch (err) {
+      toast.error("Failed to load profile");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Username fallback logic
+  const displayName =
+    profile.username ||
+    `${profile.first_name || ""} ${profile.last_name || ""}`.trim() ||
+    profile.email;
+
+  // ✏️ Handle change
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
-  });
+  };
 
-  dietInput.addEventListener("input", function () {
-    const searchTerm = dietInput.value.toLowerCase();
-    options.forEach((option) => {
-      const text = option.textContent.toLowerCase();
-      if (text.includes(searchTerm)) {
-        option.style.display = "block";
-      } else {
-        option.style.display = "none";
-      }
-    });
-  });
+  // Validation
+  const validate = () => {
+    let newErrors = {};
 
-  interestButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      button.classList.toggle("selected"); // Toggle the 'selected' class
-    });
-  });
+    if (!formData.first_name) newErrors.first_name = "First name required";
+    if (!formData.last_name) newErrors.last_name = "Last name required";
 
-  const optionButtons = document.querySelectorAll(".optbuttons");
+    if (!formData.email) {
+      newErrors.email = "Email required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Invalid email";
+    }
 
-  optionButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      optionButtons.forEach((otherButton) => {
-        if (otherButton !== button) {
-          otherButton.classList.remove("selected");
-        }
-      });
+    if (!formData.phone) newErrors.phone = "Phone required";
+    if (!formData.address) newErrors.address = "Address required";
 
-      button.classList.toggle("selected");
-    });
-  });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-  const allergyInput = document.getElementById("allergy-input");
-  const allergyList = document.getElementById("allergy-list");
+  // Save
+  const handleSave = async () => {
+    if (!validate()) return;
 
-  allergyInput.addEventListener("focus", function () {
-    allergyList.style.display = "block";
-  });
+    try {
+      setLoading(true);
 
-  allergyInput.addEventListener("blur", function () {
-    // Delay hiding the dropdown to allow click events on options to trigger
-    setTimeout(function () {
-      allergyList.style.display = "none";
-    }, 200); // Adjust the delay time as needed
-  });
+      const updated = await updateProfile(formData);
 
-  // Move the click event listeners outside the focus event listener
-  var options = Array.from(allergyList.getElementsByTagName("li"));
+      setProfile(updated);
+      setFormData(updated);
+      setEditMode(false);
 
-  options.forEach((option) => {
-    option.addEventListener("click", function () {
-      allergyInput.value = option.textContent;
-      var selectedText = $(this).text();
-      if ($(".sel:contains(" + selectedText + ")").length === 0) {
-        var newButton = $(
-          '<button class="sel new-sel">' + selectedText + "</button>"
-        );
-        newButton.css("margin", "5px");
-        newButton.addClass("selected");
-        $("#sd2").append(newButton);
-        newButton.click(function () {
-          event.preventDefault();
-          $(this).remove();
-          console.log("New button clicked: " + selectedText);
-        });
-      }
-      allergyList.style.display = "none"; // Hide the dropdown after selection
-    });
-  });
+      toast.success("Profile updated successfully");
+    } catch (err) {
+      toast.error(err.message || "Update failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  allergyInput.addEventListener("input", function () {
-    const searchTerm = allergyInput.value.toLowerCase();
-    options.forEach((option) => {
-      const text = option.textContent.toLowerCase();
-      if (text.includes(searchTerm)) {
-        option.style.display = "block";
-      } else {
-        option.style.display = "none";
-      }
-    });
-  });
-});
+  // Cancel
+  const handleCancel = () => {
+    setFormData(profile);
+    setEditMode(false);
+    setErrors({});
+  };
+
+  if (loading) return <p>Loading...</p>;
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>Profile</h2>
+
+      {/* Avatar + Name */}
+      <div>
+        <img
+          src={profile.avatar || "https://via.placeholder.com/100"}
+          alt="avatar"
+          style={{ width: "100px", borderRadius: "50%" }}
+        />
+
+        <h3>{displayName}</h3>
+
+        {!editMode && (
+          <FaEdit
+            style={{ cursor: "pointer" }}
+            onClick={() => setEditMode(true)}
+          />
+        )}
+      </div>
+
+      {/* Form Fields */}
+      {["first_name", "last_name", "email", "phone", "address"].map(
+        (field) => (
+          <div key={field}>
+            <label>{field}</label>
+
+            <input
+              name={field}
+              value={formData[field] || ""}
+              onChange={handleChange}
+              disabled={!editMode}
+            />
+
+            {errors[field] && (
+              <p style={{ color: "red" }}>{errors[field]}</p>
+            )}
+          </div>
+        )
+      )}
+
+      {/* Buttons */}
+      {editMode && (
+        <div>
+          <button onClick={handleSave}>Save</button>
+          <button onClick={handleCancel}>Cancel</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Profile;

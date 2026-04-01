@@ -12,6 +12,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import { createRoot } from "react-dom/client";
 import { UserProvider } from "./context/user.context";
 import { DarkModeProvider } from "./routes/DarkModeToggle/DarkModeContext";
 import SupabaseUserSync from "./auth/SupabaseUserSync";
