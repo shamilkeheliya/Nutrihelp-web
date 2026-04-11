@@ -2,6 +2,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./ChatPage.css";
 
+/* ---------------- Config ---------------- */
+const AI_BASE_URL = "http://localhost:8000";
+
 /* ---------------- Utils ---------------- */
 
 function uid() {
@@ -21,6 +24,8 @@ function formatTime(d) {
 export default function ChatPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [draft, setDraft] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [useRag, setUseRag] = useState(false);
   const messagesRef = useRef(null);
 
   const navLinks = useMemo(
@@ -44,17 +49,12 @@ export default function ChatPage() {
   );
 
   const [messages, setMessages] = useState(() => [
-    { id: uid(), side: "left", text: "Hey There!", time: "Today, 8:30pm" },
-    { id: uid(), side: "left", text: "How are you?", time: "Today, 8:30pm" },
-    { id: uid(), side: "right", text: "Hello!", time: "Today, 8:33pm" },
-    { id: uid(), side: "right", text: "I am fine and how are you?", time: "Today, 8:34pm" },
     {
       id: uid(),
       side: "left",
-      text: "I would like some advice on my calorie intake!",
-      time: "Today, 8:36pm",
+      text: "Hi! I'm your NutriHelp assistant. Ask me anything about nutrition, meals, or your health goals.",
+      time: formatTime(new Date()),
     },
-    { id: uid(), side: "right", text: "Yes sure!", time: "Today, 8:58pm" },
   ]);
 
   useEffect(() => {
@@ -69,16 +69,65 @@ export default function ChatPage() {
     return () => window.removeEventListener("keydown", esc);
   }, []);
 
-  function sendMessage(e) {
+  async function callChatbot(userMessage) {
+    const endpoint = useRag
+      ? `${AI_BASE_URL}/ai-model/chatbot/chat_with_rag`
+      : `${AI_BASE_URL}/ai-model/chatbot/chat`;
+
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: userMessage }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Backend returned ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.msg || data.message || String(data);
+  }
+
+  async function sendMessage(e) {
     if (e) e.preventDefault();
     const text = draft.trim();
-    if (!text) return;
+    if (!text || isLoading) return;
 
-    setMessages((prev) => [
-      ...prev,
-      { id: uid(), side: "right", text, time: formatTime(new Date()) },
-    ]);
+    const userMsg = {
+      id: uid(),
+      side: "right",
+      text,
+      time: formatTime(new Date()),
+    };
+    setMessages((prev) => [...prev, userMsg]);
     setDraft("");
+    setIsLoading(true);
+
+    try {
+      const botReply = await callChatbot(text);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: uid(),
+          side: "left",
+          text: botReply,
+          time: formatTime(new Date()),
+        },
+      ]);
+    } catch (err) {
+      console.error("Chatbot error:", err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: uid(),
+          side: "left",
+          text: `Sorry, I couldn't reach the assistant right now. (${err.message})`,
+          time: formatTime(new Date()),
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -130,9 +179,17 @@ export default function ChatPage() {
       {/* ---------- Chat ---------- */}
       <main className="nh-app">
         <section className="nh-chatCard">
-          <div className="nh-chatHeader">
-            <h2>Anon</h2>
-          </div>
+          <div className="nh-chatHeader" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+  <h2 style={{ margin: 0 }}>NutriHelp Assistant</h2>
+  <label style={{ fontSize: "0.8rem", cursor: "pointer", color: "#666", display: "flex", alignItems: "center", gap: "6px" }}>
+    <input
+      type="checkbox"
+      checked={useRag}
+      onChange={(e) => setUseRag(e.target.checked)}
+    />
+    Use knowledge base (RAG)
+  </label>
+</div>
 
           <div className="nh-messages" ref={messagesRef}>
             {messages.map((m) => (
@@ -143,6 +200,14 @@ export default function ChatPage() {
                 </div>
               </div>
             ))}
+
+            {isLoading && (
+              <div className="nh-msgRow left">
+                <div className="nh-msgWrap">
+                  <div className="nh-bubble left">Typing...</div>
+                </div>
+              </div>
+            )}
           </div>
 
           <form className="nh-composer" onSubmit={sendMessage}>
@@ -152,6 +217,7 @@ export default function ChatPage() {
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder="Type your message here..."
                 rows={1}
+                disabled={isLoading}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -161,7 +227,7 @@ export default function ChatPage() {
               />
             </div>
 
-            <button className="nh-sendBtn" type="submit">
+            <button className="nh-sendBtn" type="submit" disabled={isLoading}>
               ➤
             </button>
           </form>
