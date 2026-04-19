@@ -25,6 +25,16 @@ const OPTION_METADATA = {
     desc: "Avoid shrimp, crab, lobster, and related seafood ingredients.",
     icon: "shellfish.png",
   },
+  shrimp: {
+    label: "Shrimp allergy?",
+    desc: "Avoid foods that contain shrimp.",
+    icon: "shrimp.png",
+  },
+  fish: {
+    label: "Fish allergy?",
+    desc: "Avoid foods that contain fish.",
+    icon: "fish.png",
+  },
   wheat: {
     label: "Wheat allergy?",
     desc: "Wheat can appear in breads, pastas, sauces, and processed foods.",
@@ -75,6 +85,66 @@ const OPTION_METADATA = {
     desc: "Some processed or takeaway foods may trigger discomfort.",
     icon: "MSG_sensitivity.png",
   },
+  coconut: {
+    label: "Coconut?",
+    desc: "Avoid foods that contain coconut.",
+    icon: "coconut.png",
+  },
+  corn: {
+    label: "Corn?",
+    desc: "Avoid foods that contain corn.",
+    icon: "corn.png",
+  },
+  alcohol_fermented_products: {
+    label: "Alcohol/Fermented Products?",
+    desc: "Avoid foods that contain alcohol/fermented products.",
+    icon: "alcohol_fermented_products.png",
+  },
+  sulfites_or_preservatives: {
+    label: "Sulfites Or Preservatives?",
+    desc: "Avoid foods that contain sulfites or preservatives.",
+    icon: "sulfites_or_preservatives.png",
+  },
+  spices_e_g_mustard_cinnamon: {
+    label: "Spices (e.g., Mustard, Cinnamon)?",
+    desc: "Avoid foods that contain spices (e.g., mustard, cinnamon).",
+    icon: "spices_e_g_mustard_cinnamon.png",
+  },
+  vegetables_specific_allergens: {
+    label: "Vegetables (Specific Allergens)?",
+    desc: "Avoid foods that contain vegetables (specific allergens).",
+    icon: "vegetables_specific_allergens.png",
+  },
+  fruits_specific_allergens: {
+    label: "Fruits (Specific Allergens)?",
+    desc: "Avoid foods that contain fruits (specific allergens).",
+    icon: "fruits_specific_allergens.png",
+  },
+  meat_specific_allergens: {
+    label: "Meat (Specific Allergens)?",
+    desc: "Avoid foods that contain meat (specific allergens).",
+    icon: "meat_specific_allergens.png",
+  },
+  herbs_leafy_greens: {
+    label: "Herbs/Leafy Greens?",
+    desc: "Avoid foods that contain herbs/leafy greens.",
+    icon: "herbs_leafy_greens.png",
+  },
+  cooking_oils_specific_allergens: {
+    label: "Cooking Oils (Specific Allergens)?",
+    desc: "Avoid foods that contain cooking oils (specific allergens).",
+    icon: "cooking_oils_specific_allergens.png",
+  },
+  additives_flavorings_or_enzymes: {
+    label: "Additives (Flavorings or Enzymes)?",
+    desc: "Avoid foods that contain additives (flavorings or enzymes).",
+    icon: "additives_flavorings_or_enzymes.png",
+  },
+  not_categorized: {
+    label: "Not categorized?",
+    desc: "Avoid foods that are not categorized.",
+    icon: "not_categorized.png",
+  },
 };
 
 const OPTION_ALIASES = {
@@ -83,8 +153,6 @@ const OPTION_ALIASES = {
   tree_nuts: "tree_nut",
   dairy: "milk",
   eggs: "egg",
-  shrimp: "shellfish",
-  fish: "shellfish",
   seasame: "sesame",
   gluten: "wheat",
 };
@@ -130,6 +198,7 @@ function resolveMetadataKey(name = "") {
   if (OPTION_METADATA[key]) return key;
   if (OPTION_ALIASES[key]) return OPTION_ALIASES[key];
 
+  if (key.includes("coconut")) return "coconut";
   if (key.includes("peanut")) return "tree_nut";
   if (key.includes("tree_nut") || key.includes("nut")) return "tree_nut";
   if (key.includes("dairy") || key.includes("milk")) return "milk";
@@ -137,7 +206,9 @@ function resolveMetadataKey(name = "") {
   if (key.includes("soy")) return "soy";
   if (key.includes("sesame") || key.includes("seasame")) return "sesame";
   if (key.includes("wheat") || key.includes("gluten")) return "wheat";
-  if (key.includes("shellfish") || key.includes("shrimp") || key.includes("fish")) return "shellfish";
+  if (key.includes("shellfish")) return "shellfish";
+  if (key.includes("shrimp") || key.includes("prawn")) return "shrimp";
+  if (key.includes("fish")) return "fish";
 
   return null;
 }
