@@ -15,6 +15,7 @@ import {
 } from "../../utils/validationRules";
 import FieldError from "../../components/FieldError";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../../utils/authApi";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,20 +36,12 @@ export default function SignUp() {
   };
 
   const handleAppleSignup = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "apple",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback?mode=signup`,
-      },
-    });
-
-    if (error) {
-      setServerError(error.message);
-    }
+    const message = "Apple sign-in is not configured in this sprint build yet.";
+    setServerError(message);
+    toast.info(message);
   };
 
   const navigate = useNavigate();
-  const API_BASE = "http://localhost:8080";
 
   const validate = (values) => {
     const err = {};
@@ -100,7 +93,7 @@ export default function SignUp() {
         address: "Placeholder address 123",
       };
 
-      const res = await fetch(`${API_BASE}/api/signup`, {
+      const res = await fetch(`${API_BASE_URL}/api/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

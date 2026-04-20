@@ -4,6 +4,7 @@ import { useState, useContext, useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import "./MFAform.css"
 import { UserContext } from "../../context/user.context"
+import { API_BASE_URL, parseJsonSafe } from "../../utils/authApi"
 
 export default function MFAform() {
   const [codes, setCodes] = useState(["", "", "", "", "", ""])
@@ -91,13 +92,13 @@ export default function MFAform() {
     setLoading(true)
     try {
       const mfa_token = code
-      const resp = await fetch("http://localhost:80/api/login/mfa", {
+      const resp = await fetch(`${API_BASE_URL}/api/login/mfa`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, mfa_token }),
       })
 
-      const data = await resp.json().catch(() => ({}))
+      const data = await parseJsonSafe(resp)
 
       if (resp.ok) {
         const user = data.user
@@ -155,7 +156,7 @@ export default function MFAform() {
 
     try {
       // call your resend endpoint (adjust path if backend differs)
-      const resp = await fetch("http://localhost:80/api/login/resend-mfa", {
+      const resp = await fetch(`${API_BASE_URL}/api/login/resend-mfa`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -164,7 +165,7 @@ export default function MFAform() {
         // backend responded OK
         alert("Code resent to your email.")
       } else {
-        const data = await resp.json().catch(() => ({}))
+        const data = await parseJsonSafe(resp)
         const errMsg = data.error || "Failed to resend code"
         setError(errMsg)
       }
