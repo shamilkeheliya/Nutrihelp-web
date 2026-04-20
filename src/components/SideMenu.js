@@ -206,8 +206,7 @@ const SideMenu = ({ onNavigate, mode = "desktop", onClose }) => {
           label: "Account",
           items: [
             { type: "link", label: "Profile", to: "/userProfile" },
-            { type: "link", label: "Dietary Preference", to: "/dietaryRequirements" },
-            { type: "link", label: "Allergies & Intolerances", to: "/preferences" },
+            { type: "link", label: "Dietary & Allergies", to: "/preferences" },
             { type: "link", label: "Log Out", to: "/login" },
           ],
         },

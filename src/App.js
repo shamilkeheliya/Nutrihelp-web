@@ -279,7 +279,14 @@ function App() {
           }
         />
 
-        <Route path="/preferences" element={<FoodPreferences />} />
+        <Route
+          path="/preferences"
+          element={
+            <AuthenticateRoute>
+              <FoodPreferences />
+            </AuthenticateRoute>
+          }
+        />
 
         <Route path="/symptomassessment" element={<SymptomAssessment />} />
 

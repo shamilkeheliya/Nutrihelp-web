@@ -14,11 +14,11 @@ export default function MFAform() {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const { user, setCurrentUser } = useContext(UserContext)
+  const { currentUser, setCurrentUser } = useContext(UserContext)
 
   // prefer explicit email/password passed from previous route, otherwise use user.email (if available)
   const { email: locEmail, password: locPassword } = location.state || {}
-  const email = locEmail || user?.email || ""
+  const email = locEmail || currentUser?.email || ""
   const password = locPassword || ""
 
   // ---- OTP INPUT HANDLING ----
@@ -100,12 +100,30 @@ export default function MFAform() {
       const data = await resp.json().catch(() => ({}))
 
       if (resp.ok) {
-        // success: set current user and navigate
-        if (data.user && typeof setCurrentUser === "function") {
-          setCurrentUser(data.user)
+        const user = data.user
+        const token = data.token
+
+        if (!user || !token) {
+          setError("Login session is incomplete. Please try signing in again.")
+          return
         }
-        navigate("/")
-        // small user feedback (you can replace with toast)
+
+        const userSession = {
+          id: user.user_id,
+          email: user.email,
+          name: user.name,
+          token,
+          provider: "email_mfa",
+        }
+
+        localStorage.setItem("user_session", JSON.stringify(userSession))
+        localStorage.setItem("auth_token", token)
+
+        if (typeof setCurrentUser === "function") {
+          setCurrentUser(userSession)
+        }
+
+        navigate("/home")
         alert("MFA verification successful!")
       } else {
         // show error from server or generic message

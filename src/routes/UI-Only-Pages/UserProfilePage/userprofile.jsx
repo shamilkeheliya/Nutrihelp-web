@@ -29,8 +29,87 @@
     avatar: null,
   }
 
+  const API_BASE = "http://localhost:80"
+
+  const EMPTY_PREFERENCES = {
+    dietary_requirements: [],
+    allergies: [],
+    cuisines: [],
+    dislikes: [],
+    health_conditions: [],
+    spice_levels: [],
+    cooking_methods: [],
+  }
+
+  const PREFERENCE_GROUPS = [
+    { key: "dietary_requirements", label: "Dietary Requirements", accent: "#0f766e" },
+    { key: "allergies", label: "Allergies & Intolerances", accent: "#b91c1c" },
+    { key: "cuisines", label: "Preferred Cuisines", accent: "#1d4ed8" },
+    { key: "dislikes", label: "Disliked Ingredients", accent: "#7c3aed" },
+    { key: "health_conditions", label: "Health Conditions", accent: "#c2410c" },
+    { key: "spice_levels", label: "Spice Levels", accent: "#be123c" },
+    { key: "cooking_methods", label: "Cooking Methods", accent: "#0369a1" },
+  ]
+
   const emailOk = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e || "")
   const phoneOk = (p) => /^[0-9]{8,15}$/.test((p || "").replace(/\s/g, ""))
+
+  const toTitleLabel = (value = "") =>
+    String(value)
+      .replace(/_/g, " ")
+      .trim()
+      .split(" ")
+      .filter(Boolean)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ")
+
+  const toDisplayList = (items) => {
+    if (!Array.isArray(items)) return []
+
+    return [
+      ...new Set(
+        items
+          .map((item) => {
+            if (typeof item === "string") return item
+            if (item && typeof item === "object") return item.name || item.label || null
+            return null
+          })
+          .filter(Boolean)
+          .map((value) => toTitleLabel(value))
+      ),
+    ]
+  }
+
+  const normalizePreferences = (payload) => {
+    const data = payload && typeof payload === "object" ? payload : {}
+    return {
+      dietary_requirements: toDisplayList(data.dietary_requirements),
+      allergies: toDisplayList(data.allergies),
+      cuisines: toDisplayList(data.cuisines),
+      dislikes: toDisplayList(data.dislikes),
+      health_conditions: toDisplayList(data.health_conditions),
+      spice_levels: toDisplayList(data.spice_levels),
+      cooking_methods: toDisplayList(data.cooking_methods),
+    }
+  }
+
+  const parseApiError = async (response, fallback) => {
+    if (!response) return fallback
+    try {
+      const json = await response.clone().json()
+      if (json && typeof json === "object") {
+        return json.error || json.message || fallback
+      }
+    } catch (_error) {
+      // no-op
+    }
+    try {
+      const text = await response.text()
+      return text || fallback
+    } catch (_error) {
+      return fallback
+    }
+  }
 
   /* ============ ISOLATED STYLES WITH RESPONSIVE DESIGN ============ */
 
@@ -126,6 +205,139 @@
     padding: width < 768 ? 16 : width < 1024 ? 20 : 28,
     border: "1px solid #e5e5e7",
     boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+  })
+
+  const getPreferenceCardStyles = (width) => ({
+    borderRadius: width < 768 ? 16 : 20,
+    padding: width < 768 ? 18 : width < 1024 ? 22 : 26,
+    border: "1px solid #dbe4f6",
+    background: "linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)",
+    boxShadow: "0 14px 28px rgba(15, 23, 42, 0.08)",
+  })
+
+  const getPreferenceHeaderStyles = (width) => ({
+    display: "flex",
+    flexDirection: width < 768 ? "column" : "row",
+    alignItems: width < 768 ? "stretch" : "flex-start",
+    justifyContent: "space-between",
+    gap: width < 768 ? 12 : 16,
+    marginBottom: width < 768 ? 14 : 18,
+  })
+
+  const getPreferenceTitleStyles = (width) => ({
+    margin: 0,
+    fontSize: width < 768 ? 22 : width < 1024 ? 25 : 28,
+    lineHeight: 1.15,
+    color: "#0f172a",
+    fontWeight: 800,
+    fontFamily: "\"Sora\", \"Poppins\", sans-serif",
+  })
+
+  const getPreferenceSubtitleStyles = (width) => ({
+    margin: "8px 0 0",
+    color: "#475569",
+    fontSize: width < 768 ? 13 : 14,
+    lineHeight: 1.5,
+  })
+
+  const getPreferenceActionStyles = (width, hovered) => ({
+    minHeight: 42,
+    border: "none",
+    borderRadius: 12,
+    padding: width < 768 ? "10px 14px" : "10px 16px",
+    background: hovered
+      ? "linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)"
+      : "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+    color: "#ffffff",
+    fontSize: 13,
+    fontWeight: 700,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    cursor: "pointer",
+    boxShadow: hovered ? "0 10px 20px rgba(30, 64, 175, 0.28)" : "0 8px 16px rgba(37, 99, 235, 0.22)",
+    transition: "all 0.18s ease",
+    alignSelf: width < 768 ? "flex-start" : "center",
+  })
+
+  const getPreferenceGridStyles = (width) => ({
+    display: "grid",
+    gridTemplateColumns: width < 768 ? "1fr" : width < 1100 ? "1fr 1fr" : "1fr 1fr 1fr",
+    gap: 12,
+  })
+
+  const getPreferenceGroupStyles = () => ({
+    borderRadius: 14,
+    border: "1px solid #dbe3f4",
+    background: "#ffffff",
+    padding: "12px 12px 14px",
+    minHeight: 114,
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+  })
+
+  const getPreferenceGroupHeaderStyles = () => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 8,
+    color: "#1e293b",
+    fontWeight: 700,
+    fontSize: 13,
+  })
+
+  const getPreferenceCountStyles = () => ({
+    minWidth: 22,
+    height: 22,
+    borderRadius: 999,
+    border: "1px solid #bfdbfe",
+    background: "#eff6ff",
+    color: "#1d4ed8",
+    fontSize: 12,
+    fontWeight: 700,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "0 7px",
+  })
+
+  const getPreferenceChipWrapStyles = () => ({
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 7,
+  })
+
+  const getPreferenceChipStyles = (accent) => ({
+    borderRadius: 999,
+    border: `1px solid ${accent}33`,
+    background: `${accent}12`,
+    color: accent,
+    fontSize: 12,
+    fontWeight: 600,
+    padding: "5px 9px",
+    lineHeight: 1.2,
+  })
+
+  const getPreferenceEmptyStyles = () => ({
+    borderRadius: 999,
+    border: "1px dashed #cbd5e1",
+    color: "#64748b",
+    fontSize: 12,
+    fontWeight: 600,
+    padding: "5px 9px",
+    background: "#f8fafc",
+  })
+
+  const getPreferenceInfoStyles = (isError = false) => ({
+    borderRadius: 12,
+    padding: "12px 14px",
+    border: isError ? "1px solid #fecaca" : "1px solid #dbeafe",
+    background: isError ? "#fff1f2" : "#eff6ff",
+    color: isError ? "#b91c1c" : "#1d4ed8",
+    fontSize: 13,
+    fontWeight: 600,
   })
 
   const getTitleStyles = (width) => ({
@@ -381,6 +593,9 @@ const getRadioInnerStyles = (checked) => ({
   export default function UserAccountPage() {
     const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024)
     const [form, setForm] = useState(INITIAL_FORM)
+    const [preferences, setPreferences] = useState(EMPTY_PREFERENCES)
+    const [preferencesLoading, setPreferencesLoading] = useState(true)
+    const [preferencesError, setPreferencesError] = useState("")
     const [touched, setTouched] = useState({})
     const [hoveredButton, setHoveredButton] = useState(null)
     const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false)
@@ -428,7 +643,7 @@ const getRadioInnerStyles = (checked) => ({
 
       const session = parsedSession
 
-      const res = await fetch("http://localhost:80/api/profile", {
+      const res = await fetch(`${API_BASE}/api/profile`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -461,6 +676,70 @@ const getRadioInnerStyles = (checked) => ({
 
   fetchProfile()
 }, [])
+
+  useEffect(() => {
+    let mounted = true
+
+    const fetchPreferences = async () => {
+      setPreferencesLoading(true)
+      setPreferencesError("")
+
+      try {
+        const sessionRaw = localStorage.getItem("user_session")
+        const parsedSession = sessionRaw ? JSON.parse(sessionRaw) : null
+        const token =
+          localStorage.getItem("auth_token") ||
+          localStorage.getItem("jwt_token") ||
+          parsedSession?.token ||
+          currentUser?.token
+
+        if (!token) {
+          if (mounted) {
+            setPreferencesError("Sign in to view your saved dietary preferences.")
+            setPreferences(EMPTY_PREFERENCES)
+          }
+          return
+        }
+
+        const res = await fetch(`${API_BASE}/api/user/preferences`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (res.status === 404) {
+          if (mounted) setPreferences(EMPTY_PREFERENCES)
+          return
+        }
+
+        if (!res.ok) {
+          const reason = await parseApiError(res, "Unable to load dietary preferences.")
+          throw new Error(reason)
+        }
+
+        const data = await res.json()
+        if (mounted) {
+          setPreferences(normalizePreferences(data))
+        }
+      } catch (error) {
+        if (mounted) {
+          setPreferencesError(error?.message || "Unable to load dietary preferences.")
+        }
+      } finally {
+        if (mounted) {
+          setPreferencesLoading(false)
+        }
+      }
+    }
+
+    fetchPreferences()
+
+    return () => {
+      mounted = false
+    }
+  }, [currentUser, isChangePasswordOpen])
 
     useEffect(() => {
       const handleResize = () => setWidth(window.innerWidth)
@@ -629,6 +908,62 @@ const getRadioInnerStyles = (checked) => ({
               >
                 Save Changes
               </button>
+            </section>
+
+            <section style={getPreferenceCardStyles(width)}>
+              <div style={getPreferenceHeaderStyles(width)}>
+                <div>
+                  <h2 style={getPreferenceTitleStyles(width)}>Dietary & Allergies Snapshot</h2>
+                  <p style={getPreferenceSubtitleStyles(width)}>
+                    This section shows exactly what you saved in your food preference form.
+                  </p>
+                </div>
+                <button
+                  style={getPreferenceActionStyles(width, hoveredButton === "preferences")}
+                  onMouseEnter={() => setHoveredButton("preferences")}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  onClick={() => navigate("/preferences")}
+                >
+                  Update Preferences
+                  <ArrowRight size={16} />
+                </button>
+              </div>
+
+              {preferencesLoading ? (
+                <div style={getPreferenceInfoStyles(false)}>
+                  Loading your saved food preferences...
+                </div>
+              ) : preferencesError ? (
+                <div style={getPreferenceInfoStyles(true)}>{preferencesError}</div>
+              ) : (
+                <div style={getPreferenceGridStyles(width)}>
+                  {PREFERENCE_GROUPS.map((group) => {
+                    const items = preferences[group.key] || []
+                    return (
+                      <article key={group.key} style={getPreferenceGroupStyles()}>
+                        <div style={getPreferenceGroupHeaderStyles()}>
+                          <span>{group.label}</span>
+                          <span style={getPreferenceCountStyles()}>{items.length}</span>
+                        </div>
+                        <div style={getPreferenceChipWrapStyles()}>
+                          {items.length ? (
+                            items.map((item, index) => (
+                              <span
+                                key={`${group.key}-${item}-${index}`}
+                                style={getPreferenceChipStyles(group.accent)}
+                              >
+                                {item}
+                              </span>
+                            ))
+                          ) : (
+                            <span style={getPreferenceEmptyStyles()}>Not set</span>
+                          )}
+                        </div>
+                      </article>
+                    )
+                  })}
+                </div>
+              )}
             </section>
 
             {/* Your Password Section */}

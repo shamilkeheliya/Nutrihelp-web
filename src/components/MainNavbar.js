@@ -294,18 +294,10 @@ const MainNavbar = () => {
                   <Link
                     className="dropdown-item"
                     role="menuitem"
-                    to="/dietaryRequirements"
-                    onClick={() => setOpenMenu(null)}
-                  >
-                    Dietary Preference
-                  </Link>
-                  <Link
-                    className="dropdown-item"
-                    role="menuitem"
                     to="/preferences"
                     onClick={() => setOpenMenu(null)}
                   >
-                    Allergies &amp; Intolerances
+                    Dietary &amp; Allergies
                   </Link>
                   <Link
                     className="dropdown-item"
