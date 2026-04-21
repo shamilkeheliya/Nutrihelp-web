@@ -111,6 +111,40 @@
     }
   }
 
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+  const fetchWithRetry = async (
+    url,
+    options = {},
+    {
+      attempts = 3,
+      retryStatuses = [408, 429, 500, 502, 503, 504],
+    } = {}
+  ) => {
+    let lastError = null
+
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+      try {
+        const response = await fetch(url, options)
+
+        if (response.ok) return response
+
+        if (attempt < attempts && retryStatuses.includes(response.status)) {
+          await sleep(120 * attempt)
+          continue
+        }
+
+        return response
+      } catch (error) {
+        lastError = error
+        if (attempt === attempts) break
+        await sleep(120 * attempt)
+      }
+    }
+
+    throw lastError || new Error("Network request failed")
+  }
+
   /* ============ ISOLATED STYLES WITH RESPONSIVE DESIGN ============ */
 
   const getPageStyles = (width) => ({
@@ -701,7 +735,7 @@ const getRadioInnerStyles = (checked) => ({
           return
         }
 
-        const res = await fetch(`${API_BASE}/api/user/preferences`, {
+        const res = await fetchWithRetry(`${API_BASE}/api/user/preferences`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -715,7 +749,11 @@ const getRadioInnerStyles = (checked) => ({
         }
 
         if (!res.ok) {
-          const reason = await parseApiError(res, "Unable to load dietary preferences.")
+          const fallback =
+            res.status >= 500
+              ? "Temporary server issue while loading preferences. Please refresh."
+              : "Unable to load dietary preferences."
+          const reason = await parseApiError(res, fallback)
           throw new Error(reason)
         }
 
