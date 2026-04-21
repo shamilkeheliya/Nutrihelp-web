@@ -35,6 +35,7 @@ import Recipe from "./routes/MyRecipe/Recipe";
 import Appointment from "./routes/UI-Only-Pages/Appointment/Appointment";
 import newMenu from "./routes/NewMenu/newMenu";
 import Meal from "./routes/Meal/Meal";
+import MealDetail from "./routes/Meal/MealDetail";
 import Scan from "./routes/ScanBarcode/Scan.jsx"
 import MFAform from "./routes/MFA/MFAform";
 import Dashboard from "./routes/NewMenu/Dashboard";
@@ -48,7 +49,7 @@ import FoodPreferences from "./routes/FoodPreferences/FoodPreferences";
 import HealthTools from "./routes/HealthTools/HealthTools";
 import RecipeRating from "./routes/RecipeRating/RecipeRating";
 import ShoppingList from "./routes/UI-Only-Pages/ShoppingList/ShoppingList";
-import RecipeDetail from "./routes/RecipeRating/RecipeDetail";
+import MealRecipeDetail from "./routes/Meal/MealRecipeDetail";
 import SymptomAssessment from "./routes/SymptomAssessment/SymptomAssessment";
 import Leaderboard from "./routes/LeaderBoard/leaderBoard";
 import ObesityPredictor from "./routes/survey/ObesityPredictor";
@@ -136,6 +137,22 @@ function App() {
         <Route path="/roadmap" element={<FitnessRoadmap />} />
         <Route path="/Scan" element={<Scan />} />
         <Route path="/Meal" element={<Meal />} />
+        <Route
+          path="/dish/detail"
+          element={
+            <AuthenticateRoute>
+              <MealDetail />
+            </AuthenticateRoute>
+          }
+        />
+        <Route
+          path="/meal/detail"
+          element={
+            <AuthenticateRoute>
+              <MealDetail />
+            </AuthenticateRoute>
+          }
+        />
         <Route path="/account" element={<Account />} />
         {/* PRIVATE ROUTES */}
         <Route
@@ -255,7 +272,14 @@ function App() {
           }
         />
 
-        <Route path="/recipe/:id" element={<RecipeDetail />} />
+        <Route
+          path="/recipe/:id"
+          element={
+            <AuthenticateRoute>
+              <MealRecipeDetail />
+            </AuthenticateRoute>
+          }
+        />
         <Route
           path="Meal"
           element={
@@ -279,7 +303,14 @@ function App() {
           }
         />
 
-        <Route path="/preferences" element={<FoodPreferences />} />
+        <Route
+          path="/preferences"
+          element={
+            <AuthenticateRoute>
+              <FoodPreferences />
+            </AuthenticateRoute>
+          }
+        />
 
         <Route path="/symptomassessment" element={<SymptomAssessment />} />
 
