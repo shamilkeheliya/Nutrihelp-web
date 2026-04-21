@@ -6,6 +6,7 @@ import { CalendarDays, ChevronLeft, Cloud, Clock3, Moon, Plus, Star, Sun, Users 
 import { useLocation, useNavigate } from "react-router-dom";
 
 const DEFAULT_IMAGE = "/images/meal-mock/placeholder.svg";
+const MEAL_SELECTIONS_STORAGE_KEY = "nutrihelp_add_meal_selections_by_date_v1";
 
 const NUTRITION_PRESETS = {
   breakfast: { calories: 280, carbs: 45, protein: 10, fiber: 8, fat: 9, sodium: 140 },
@@ -99,6 +100,38 @@ function getTodayISO() {
   return local.toISOString().slice(0, 10);
 }
 
+function normalize(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function normalizeMealType(value) {
+  const normalized = normalize(value);
+  if (normalized === "breakfast" || normalized === "lunch" || normalized === "dinner") return normalized;
+  if (normalized === "snack" || normalized === "snacks" || normalized === "other") return "others";
+  return "others";
+}
+
+function readStoredSelections() {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem(MEAL_SELECTIONS_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeStoredSelections(nextValue) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(MEAL_SELECTIONS_STORAGE_KEY, JSON.stringify(nextValue));
+  } catch {
+    // Ignore storage write issues and keep UX responsive.
+  }
+}
+
 function includesKeyword(source, keywords) {
   return keywords.some((keyword) => source.includes(keyword));
 }
@@ -178,6 +211,35 @@ function buildDetailFromMeal(meal) {
   };
 }
 
+function toSelectedMealPayload(detail, selectedMealType, sourceMeal) {
+  const normalizedMealType = normalizeMealType(selectedMealType || detail?.mealType || sourceMeal?.mealType);
+  const recipeIdKey = normalize(detail?.recipeId || sourceMeal?.recipeId);
+  const titleKey = normalize(detail?.title || sourceMeal?.title || sourceMeal?.name);
+  const idKey = normalize(detail?.id || sourceMeal?.id);
+  const identityKey =
+    (recipeIdKey && recipeIdKey !== "null" && `recipe:${recipeIdKey}`) ||
+    (titleKey && `title:${titleKey}`) ||
+    (idKey && `id:${idKey}`) ||
+    `legacy:${Date.now()}`;
+  const selectedId = `slot:${identityKey}|${normalizedMealType}`;
+
+  return {
+    id: selectedId,
+    name: detail?.title || sourceMeal?.title || "Meal",
+    recipeId: detail?.recipeId || sourceMeal?.recipeId || sourceMeal?.id || null,
+    title: detail?.title || sourceMeal?.title || "Meal",
+    image: detail?.image || sourceMeal?.image || DEFAULT_IMAGE,
+    time: detail?.time || sourceMeal?.time || "N/A",
+    servings: detail?.servings || sourceMeal?.servings || "N/A",
+    level: sourceMeal?.level || "Easy",
+    mealType: normalizedMealType,
+    tags: Array.isArray(detail?.tags) ? detail.tags : [],
+    description: detail?.description || "",
+    nutrition: detail?.nutrition || {},
+    ingredients: Array.isArray(detail?.ingredients) ? detail.ingredients : [],
+  };
+}
+
 const MealDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -208,6 +270,23 @@ const MealDetail = () => {
   };
 
   const handleAddToday = () => {
+    const payload = toSelectedMealPayload(detail, selectedAddTo, meal);
+    const nextSelectionByDate = readStoredSelections();
+    const currentDateSelections = nextSelectionByDate[todayIso] || {};
+
+    nextSelectionByDate[todayIso] = {
+      ...currentDateSelections,
+      [payload.id]: payload,
+    };
+
+    writeStoredSelections(nextSelectionByDate);
+
+    try {
+      sessionStorage.setItem("selectedMealDetail", JSON.stringify(payload));
+    } catch {
+      // Ignore storage write issues and keep success flow.
+    }
+
     toast.success(`Added ${detail.title} to today's ${selectedAddTo}.`);
   };
 
@@ -219,6 +298,24 @@ const MealDetail = () => {
 
   const handleAddToSpecificDate = () => {
     if (!specificDate || specificDate < todayIso) return;
+
+    const payload = toSelectedMealPayload(detail, selectedAddTo, meal);
+    const nextSelectionByDate = readStoredSelections();
+    const currentDateSelections = nextSelectionByDate[specificDate] || {};
+
+    nextSelectionByDate[specificDate] = {
+      ...currentDateSelections,
+      [payload.id]: payload,
+    };
+
+    writeStoredSelections(nextSelectionByDate);
+
+    try {
+      sessionStorage.setItem("selectedMealDetail", JSON.stringify(payload));
+    } catch {
+      // Ignore storage write issues and keep success flow.
+    }
+
     toast.success(`Added ${detail.title} to ${selectedAddTo} on ${specificDate}.`);
     setIsSpecificDayPickerOpen(false);
   };

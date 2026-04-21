@@ -506,9 +506,16 @@ function formatMealTypeLabel(mealType) {
   return normalized.charAt(0).toUpperCase() + normalized.slice(1);
 }
 
-function getMealSelectionKey(meal, fallback = "") {
+function normalizeMealType(value) {
+  const normalized = normalize(value);
+  if (normalized === "breakfast" || normalized === "lunch" || normalized === "dinner") return normalized;
+  if (normalized === "snack" || normalized === "snacks" || normalized === "other") return "others";
+  return "others";
+}
+
+function getMealIdentityKey(meal, fallback = "") {
   const recipeIdKey = normalize(meal?.recipeId);
-  if (recipeIdKey) return `recipe:${recipeIdKey}`;
+  if (recipeIdKey && recipeIdKey !== "null") return `recipe:${recipeIdKey}`;
 
   const titleKey = normalize(meal?.title || meal?.name);
   if (titleKey) return `title:${titleKey}`;
@@ -522,15 +529,27 @@ function getMealSelectionKey(meal, fallback = "") {
   return "";
 }
 
+function getMealSlotKey(meal, fallback = "") {
+  const identityKey = getMealIdentityKey(meal, fallback);
+  if (!identityKey) return "";
+
+  const mealTypeKey = normalizeMealType(meal?.mealType);
+  return `slot:${identityKey}|${mealTypeKey}`;
+}
+
 function normalizeSelectionMap(selectionMap) {
   if (!selectionMap || typeof selectionMap !== "object") return {};
 
   const normalizedMap = {};
   Object.entries(selectionMap).forEach(([entryKey, meal], index) => {
     if (!meal || typeof meal !== "object") return;
-    const selectionKey = getMealSelectionKey(meal, `${entryKey || index}`);
+    const normalizedMeal = {
+      ...meal,
+      mealType: normalizeMealType(meal?.mealType),
+    };
+    const selectionKey = getMealSlotKey(normalizedMeal, `${entryKey || index}`);
     if (!selectionKey || normalizedMap[selectionKey]) return;
-    normalizedMap[selectionKey] = meal;
+    normalizedMap[selectionKey] = normalizedMeal;
   });
 
   return normalizedMap;
@@ -609,7 +628,37 @@ const Meal = () => {
     [mealSelectionsByDate, selectedDate],
   );
 
-  const selectedMeals = useMemo(() => Object.values(selectedMealMap), [selectedMealMap]);
+  const selectedMealEntries = useMemo(
+    () =>
+      Object.entries(selectedMealMap).map(([entryId, meal]) => ({
+        entryId,
+        meal,
+      })),
+    [selectedMealMap],
+  );
+
+  const selectedMeals = useMemo(
+    () => selectedMealEntries.map(({ meal }) => meal),
+    [selectedMealEntries],
+  );
+
+  const selectedSlotKeySet = useMemo(() => {
+    const slotKeySet = new Set();
+    selectedMealEntries.forEach(({ entryId, meal }) => {
+      const slotKey = getMealSlotKey(meal, entryId);
+      if (slotKey) slotKeySet.add(slotKey);
+    });
+    return slotKeySet;
+  }, [selectedMealEntries]);
+
+  const selectedIdentityKeySet = useMemo(() => {
+    const identitySet = new Set();
+    selectedMealEntries.forEach(({ entryId, meal }) => {
+      const identityKey = getMealIdentityKey(meal, entryId);
+      if (identityKey) identitySet.add(identityKey);
+    });
+    return identitySet;
+  }, [selectedMealEntries]);
 
   const selectedMealGroups = useMemo(() => {
     const groups = {
@@ -619,20 +668,20 @@ const Meal = () => {
       others: [],
     };
 
-    selectedMeals
-      .filter((meal) => includesQuery(meal, normalizedQuery))
-      .forEach((meal) => {
-        const mealType = normalize(meal?.mealType);
+    selectedMealEntries
+      .filter(({ meal }) => includesQuery(meal, normalizedQuery))
+      .forEach(({ entryId, meal }) => {
+        const mealType = normalizeMealType(meal?.mealType);
         if (mealType === "breakfast" || mealType === "lunch" || mealType === "dinner" || mealType === "others") {
-          groups[mealType].push(meal);
+          groups[mealType].push({ entryId, meal });
           return;
         }
 
-        groups.others.push(meal);
+        groups.others.push({ entryId, meal });
       });
 
     return groups;
-  }, [normalizedQuery, selectedMeals]);
+  }, [normalizedQuery, selectedMealEntries]);
 
   const filteredRecommended = useMemo(
     () =>
@@ -717,12 +766,12 @@ const Meal = () => {
   );
 
   const selectedDish = useMemo(() => {
-    if (selectedMeals.length === 0) return null;
-    return selectedMeals[selectedMeals.length - 1];
-  }, [selectedMeals]);
+    if (selectedMealEntries.length === 0) return null;
+    return selectedMealEntries[selectedMealEntries.length - 1].meal;
+  }, [selectedMealEntries]);
 
   const selectedDishKey = useMemo(
-    () => (selectedDish ? getMealSelectionKey(selectedDish, selectedDish.id || selectedDish.title) : ""),
+    () => (selectedDish ? getMealIdentityKey(selectedDish, selectedDish.id || selectedDish.title) : ""),
     [selectedDish],
   );
 
@@ -972,7 +1021,7 @@ const Meal = () => {
   }, [activeFilter, normalizedQuery, selectedDate]);
 
   const toggleMealSelection = (meal) => {
-    const selectionKey = getMealSelectionKey(meal, meal?.id || meal?.title || selectedDate);
+    const selectionKey = getMealSlotKey(meal, meal?.id || meal?.title || selectedDate);
     if (!selectionKey) return;
 
     setMealSelectionsByDate((previousByDate) => {
@@ -982,8 +1031,32 @@ const Meal = () => {
       if (nextDateMap[selectionKey]) {
         delete nextDateMap[selectionKey];
       } else {
-        nextDateMap[selectionKey] = meal;
+        nextDateMap[selectionKey] = {
+          ...meal,
+          mealType: normalizeMealType(meal?.mealType),
+        };
       }
+
+      const nextByDate = { ...previousByDate };
+      if (Object.keys(nextDateMap).length === 0) {
+        delete nextByDate[selectedDate];
+      } else {
+        nextByDate[selectedDate] = nextDateMap;
+      }
+
+      return nextByDate;
+    });
+  };
+
+  const removeSelectionEntry = (entryId) => {
+    if (!entryId) return;
+
+    setMealSelectionsByDate((previousByDate) => {
+      const currentDateMap = normalizeSelectionMap(previousByDate[selectedDate] || {});
+      if (!currentDateMap[entryId]) return previousByDate;
+
+      const nextDateMap = { ...currentDateMap };
+      delete nextDateMap[entryId];
 
       const nextByDate = { ...previousByDate };
       if (Object.keys(nextDateMap).length === 0) {
@@ -1305,14 +1378,14 @@ const Meal = () => {
                             <p className="selected-group-empty">No selected dishes in this meal.</p>
                           ) : (
                             <div className="selected-group-list">
-                              {sectionMeals.map((meal, index) => {
-                                const mealKey = getMealSelectionKey(
+                              {sectionMeals.map(({ entryId, meal }, index) => {
+                                const mealKey = getMealIdentityKey(
                                   meal,
-                                  `${meal.id || meal.recipeId || meal.title || index}`,
+                                  `${entryId || meal.id || meal.recipeId || meal.title || index}`,
                                 );
                                 return (
                                 <article
-                                  key={`selected-${section.key}-${mealKey}`}
+                                  key={`selected-${section.key}-${entryId || mealKey}`}
                                   className="selected-dish-card"
                                 >
                                   <div className="selected-dish-thumb">
@@ -1346,10 +1419,10 @@ const Meal = () => {
                                       </span>
                                     </div>
 
-                                    {Array.isArray(meal.tags) && meal.tags.length > 0 ? (
+                                        {Array.isArray(meal.tags) && meal.tags.length > 0 ? (
                                       <div className="selected-dish-tags">
                                         {meal.tags.slice(0, 3).map((tag) => (
-                                          <span key={`${mealKey}-${tag}`}>{tag}</span>
+                                          <span key={`${entryId || mealKey}-${tag}`}>{tag}</span>
                                         ))}
                                       </div>
                                     ) : null}
@@ -1373,7 +1446,7 @@ const Meal = () => {
                                     <button
                                       type="button"
                                       className="selected-remove-btn"
-                                      onClick={() => toggleMealSelection(meal)}
+                                      onClick={() => removeSelectionEntry(entryId)}
                                       aria-label={`Remove ${meal.title}`}
                                     >
                                       <Trash2 size={16} />
@@ -1401,12 +1474,23 @@ const Meal = () => {
                     <div className="recommended-row-shell">
                       <div className="recommended-row" ref={recommendedRowRef}>
                         {filteredRecommended.map((meal) => {
-                          const mealSelectionKey = getMealSelectionKey(
+                          const mealSlotKey = getMealSlotKey(
                             meal,
                             meal.id || meal.recipeId || meal.title,
                           );
-                          const isSelected = Boolean(selectedMealMap[mealSelectionKey]);
-                          const isSelectedDish = Boolean(selectedDishKey) && selectedDishKey === mealSelectionKey;
+                          const mealIdentityKey = getMealIdentityKey(
+                            meal,
+                            meal.id || meal.recipeId || meal.title,
+                          );
+                          const isSelectedInCurrentSlot =
+                            Boolean(mealSlotKey) && selectedSlotKeySet.has(mealSlotKey);
+                          const isSelected =
+                            isSelectedInCurrentSlot ||
+                            (Boolean(mealIdentityKey) && selectedIdentityKeySet.has(mealIdentityKey));
+                          const isSelectedDish =
+                            Boolean(selectedDishKey) &&
+                            Boolean(mealIdentityKey) &&
+                            selectedDishKey === mealIdentityKey;
 
                           return (
                             <article
@@ -1526,12 +1610,23 @@ const Meal = () => {
                     <div className="all-meals-wrap">
                       <div className="all-meals-grid">
                         {paginatedAllMeals.map((meal) => {
-                          const mealSelectionKey = getMealSelectionKey(
+                          const mealSlotKey = getMealSlotKey(
                             meal,
                             meal.id || meal.recipeId || meal.title,
                           );
-                          const isSelected = Boolean(selectedMealMap[mealSelectionKey]);
-                          const isSelectedDish = Boolean(selectedDishKey) && selectedDishKey === mealSelectionKey;
+                          const mealIdentityKey = getMealIdentityKey(
+                            meal,
+                            meal.id || meal.recipeId || meal.title,
+                          );
+                          const isSelectedInCurrentSlot =
+                            Boolean(mealSlotKey) && selectedSlotKeySet.has(mealSlotKey);
+                          const isSelected =
+                            isSelectedInCurrentSlot ||
+                            (Boolean(mealIdentityKey) && selectedIdentityKeySet.has(mealIdentityKey));
+                          const isSelectedDish =
+                            Boolean(selectedDishKey) &&
+                            Boolean(mealIdentityKey) &&
+                            selectedDishKey === mealIdentityKey;
 
                           return (
                             <article

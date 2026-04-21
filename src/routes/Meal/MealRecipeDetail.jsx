@@ -350,7 +350,15 @@ function buildRecipeData(source, routeId) {
 
 function toSelectedMealPayload(recipe, selectedMealType) {
   const mealType = normalizePlanMealType(selectedMealType);
-  const selectedId = String(recipe.id || recipe.recipeId || recipe.title || Date.now());
+  const recipeIdKey = normalize(recipe.recipeId);
+  const titleKey = normalize(recipe.title || recipe.name);
+  const idKey = normalize(recipe.id);
+  const identityKey =
+    (recipeIdKey && recipeIdKey !== "null" && `recipe:${recipeIdKey}`) ||
+    (titleKey && `title:${titleKey}`) ||
+    (idKey && `id:${idKey}`) ||
+    `legacy:${Date.now()}`;
+  const selectedId = `slot:${identityKey}|${mealType}`;
 
   return {
     id: selectedId,
