@@ -1,10 +1,7 @@
 @import url("../../UiTimer/UiTimer.css");
 
 /* Ensure html and body fill viewport for this page */
-html,
-body,
-#root,
-.App {
+html, body, #root, .App {
   min-height: 100%;
 }
 
@@ -23,7 +20,7 @@ body,
 }
 
 /* Ensure all direct children take full width */
-.scan-products-page>* {
+.scan-products-page > * {
   width: 100%;
   max-width: 900px;
 }
@@ -36,8 +33,8 @@ body,
   max-width: 100%;
 }
 
-/* Svan button selector */
-.scan-button-selector {
+ /* Svan button selector */
+ .scan-button-selector{
   background-color: var(--card-background);
   color: var(--text-primary);
   border: 4px solid var(--primary-color);
@@ -49,12 +46,11 @@ body,
   font-size: 1.06rem;
   font-weight: 900;
   transition: transform .06s ease, box-shadow .18s ease, filter .18s ease;
-}
-
-.scan-button-selector:focus {
+ }
+.scan-button-selector:focus{
   background-color: var(--primary-dark);
   color: var(--text-inverse);
-}
+ }
 
 .scan-products-container {
   max-width: 900px;
@@ -82,7 +78,6 @@ body,
   padding: 1rem;
   text-shadow: none;
 }
-
 /* .scanHead{
   text-align: left;
   width: 900px;
@@ -131,42 +126,36 @@ body,
   text-align: center;
   transition: border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .06s ease;
 }
-
 .upload-section:hover {
   border-color: var(--primary-dark);
   background: var(--card-background);
-  box-shadow: 0 0 0 4px rgba(124, 58, 237, .12);
+  box-shadow: 0 0 0 4px rgba(124,58,237,.12);
   transform: translateY(-1px);
 }
 
-.upload-section input[type="file"] {
-  display: none;
-}
-
-.scan-products-container input {
+.upload-section input[type="file"] { display: none; }
+.scan-products-container input{
   background-color: var(--input-background);
   border: 1px solid var(--border-color);
-  width: 100%;
+  width:100%;
   padding: 1rem;
   border-radius: 10px;
   margin: 10px auto;
   color: var(--text-primary);
 }
-
-.upload-section p {
+.upload-section p{
   font-size: 1.2rem !important;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   padding: 10px 18px;
   font-weight: 800;
   color: var(--primary-color) !important;
   cursor: pointer;
 }
-
 .upload-section label[for="file-upload"]:hover {
   filter: brightness(1.03);
-  box-shadow: 0 10px 20px rgba(124, 58, 237, .18);
+  box-shadow: 0 10px 20px rgba(124,58,237,.18);
 }
 
 .upload-button {
@@ -182,7 +171,6 @@ body,
   box-shadow: var(--card-shadow);
   transition: transform .06s ease, box-shadow .18s ease, filter .18s ease;
 }
-
 .upload-button:hover {
   filter: brightness(1.02);
   background-color: var(--success-dark);
@@ -190,9 +178,8 @@ body,
 }
 
 .view-history-button {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
+  width: 100%;
+  margin-top: 14px;
   background: var(--card-background);
   color: var(--primary-color);
   padding: 12px 18px;
@@ -201,49 +188,444 @@ body,
   font-weight: 800;
   font-size: .98rem;
   box-shadow: var(--card-shadow);
-  z-index: 100;
+  cursor: pointer;
 }
-
 .view-history-button:hover {
   filter: brightness(1.03);
   box-shadow: var(--card-shadow-hover);
   background: var(--hover-background);
 }
 
-@media (max-width: 780px) {
+.scan-muted {
+  margin: 0 0 18px;
+  color: var(--text-secondary);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.scan-actions-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 0 1rem 1rem;
+}
+
+.scan-inline-select {
+  width: 220px;
+  max-width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  background: var(--input-background);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.scan-image-preview {
+  padding: 0 1rem 1.25rem;
+}
+
+.scan-preview-img {
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid var(--border-color);
+}
+
+.scan-result-card,
+.scan-summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.scan-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 0 1rem;
+}
+
+.scan-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.scan-pill.ok {
+  background: rgba(22, 163, 74, 0.14);
+  color: #166534;
+}
+
+.scan-pill.warn {
+  background: rgba(217, 119, 6, 0.16);
+  color: #92400e;
+}
+
+.scan-pill.info {
+  background: rgba(14, 116, 144, 0.14);
+  color: #155e75;
+}
+
+.scan-result-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 0 1rem;
+}
+
+.scan-stat {
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--primary-light);
+  border: 1px solid var(--border-color);
+}
+
+.scan-stat span {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+}
+
+.scan-stat strong {
+  color: var(--text-primary);
+  font-size: 1.02rem;
+}
+
+.scan-note,
+.scan-error,
+.scan-success {
+  margin: 0 1rem;
+  padding: 14px 16px;
+  border-radius: 16px;
+  font-weight: 600;
+}
+
+.scan-note {
+  background: rgba(14, 116, 144, 0.08);
+  color: var(--text-primary);
+}
+
+.scan-note.friendly {
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.scan-review-banner {
+  margin: 0 1rem;
+  padding: 20px 22px;
+  border-radius: 22px;
+  background:
+    linear-gradient(135deg, rgba(234, 244, 255, 0.96), rgba(244, 249, 255, 0.92));
+  border: 1px solid rgba(14, 116, 144, 0.14);
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.scan-review-kicker {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #155e75;
+  margin-bottom: 8px;
+}
+
+.scan-review-banner h3,
+.scan-suggestions-header h3 {
+  margin: 0;
+  font-size: 1.45rem;
+  color: var(--text-primary);
+}
+
+.scan-review-banner p,
+.scan-suggestions-header p {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.scan-review-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.scan-meta-chip {
+  min-width: 140px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(14, 116, 144, 0.12);
+}
+
+.scan-meta-chip span {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  margin-bottom: 6px;
+}
+
+.scan-meta-chip strong {
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.scan-editable-grid {
+  margin: 0 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.scan-edit-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  background: rgba(250, 252, 255, 0.96);
+}
+
+.scan-edit-card > span {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.scan-edit-card small {
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.scan-edit-input {
+  margin: 0 !important;
+  font-size: 1.08rem;
+  font-weight: 800;
+  border-radius: 14px !important;
+  background: #fff !important;
+}
+
+.scan-calorie-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scan-calorie-input-wrap span {
+  color: var(--text-secondary);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.scan-suggestions-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.scan-meal-info-card {
+  margin: 0 1rem;
+  padding: 20px 22px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(252, 254, 255, 0.98), rgba(244, 249, 255, 0.92));
+  border: 1px solid rgba(14, 116, 144, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scan-meal-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.scan-meal-info-header h3 {
+  margin: 4px 0 0;
+  font-size: 1.3rem;
+  color: var(--text-primary);
+}
+
+.scan-meal-info-copy {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.98rem;
+}
+
+.scan-meal-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.scan-meal-info-stat {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(14, 116, 144, 0.10);
+}
+
+.scan-meal-info-stat span {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  margin-bottom: 6px;
+}
+
+.scan-meal-info-stat strong {
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.scan-suggestions-header {
+  padding: 0 1rem;
+}
+
+.scan-error {
+  background: rgba(220, 38, 38, 0.12);
+  color: #b91c1c;
+}
+
+.scan-success {
+  background: rgba(22, 163, 74, 0.12);
+  color: #166534;
+}
+
+.scan-topk-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  padding: 0 1rem;
+}
+
+.scan-topk-option {
+  border: 1px solid var(--border-color);
+  background: var(--card-background);
+  color: var(--text-primary);
+  border-radius: 16px;
+  padding: 14px 16px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.scan-topk-option.active {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
+}
+
+.scan-quality-list {
+  margin: 0 1rem;
+  padding: 0 0 0 1.25rem;
+  color: var(--text-secondary);
+}
+
+.scan-meal-log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 1rem 1rem;
+}
+
+.scan-meal-log-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--hover-background);
+  border: 1px solid var(--border-color);
+}
+
+.scan-meal-log-item p {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+}
+
+.scan-delete-btn {
+  border: none;
+  border-radius: 12px;
+  background: rgba(220, 38, 38, 0.12);
+  color: #b91c1c;
+  padding: 10px 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.scan-button-selector:disabled,
+.upload-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  filter: none;
+}
+
+@media (max-width: 780px){
   .scan-products-page {
     padding: 1rem 0.5rem 100px 0.5rem;
   }
-
-  .scan-products-page>* {
+  .scan-products-page > * {
     max-width: 100%;
   }
-
   .scan-products-container {
     padding: 28px 20px;
     margin: 0;
     width: 100%;
     border-radius: 12px;
   }
-
-  .scan-products-form {
-    grid-template-columns: 1fr;
-  }
-
-  .scan-products-label {
-    font-size: .96rem;
-  }
-
+  .scan-products-form { grid-template-columns: 1fr; }
+  .scan-products-label { font-size: .96rem; }
   .upload-section {
     min-height: 15rem;
+  }
+  .scan-actions-row {
+    flex-direction: column;
+    padding: 0 1rem 1rem;
+  }
+  .scan-review-banner,
+  .scan-editable-grid {
+    grid-template-columns: 1fr;
+  }
+  .scan-review-banner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .scan-inline-select,
+  .scan-actions-row .upload-button,
+  .scan-actions-row .scan-button-selector {
+    width: 100%;
+  }
+  .scan-status-row,
+  .scan-meal-log-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .scan-result-grid {
+    grid-template-columns: 1fr;
+  }
+  .scan-meal-info-grid {
+    grid-template-columns: 1fr;
   }
 }
 
 .scan-products-container {
   padding-top: 28px;
-}
-
-.error-border {
-  border-color: #ef4444 !important;
-  box-shadow: 0 0 0 1px #ef4444 !important;
 }
