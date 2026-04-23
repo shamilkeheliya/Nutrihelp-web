@@ -43,6 +43,12 @@ function nutritionKey(label) {
   return String(label || "").trim().toLowerCase();
 }
 
+function hasBlockingPhotoIssue(issues = []) {
+  return issues.some((issue) =>
+    /resolution|blurry|large face|clear food photo/i.test(issue)
+  );
+}
+
 function ScanProducts() {
   const fileInputRef = useRef(null);
   const activeLabelRef = useRef("");
@@ -64,13 +70,17 @@ function ScanProducts() {
   const [isLoadingNutrition, setIsLoadingNutrition] = useState(false);
 
   const requiresConfirmation = Boolean(scanResult?.is_unclear);
-  const activeLabel = manualLabelInput.trim() || selectedLabel || scanResult?.label || "";
+  const hasConfidentScanLabel = Boolean(scanResult?.label && !requiresConfirmation);
+  const activeLabel =
+    manualLabelInput.trim() || selectedLabel || (hasConfidentScanLabel ? scanResult?.label : "");
   const isManualOverride = Boolean(
     manualLabelInput.trim() &&
       manualLabelInput.trim() !== selectedLabel &&
       manualLabelInput.trim() !== scanResult?.label
   );
   const canSave = Boolean(scanResult && activeLabel && !isLoadingNutrition && !isSaving);
+  const hasSuggestedMatches = Boolean(scanResult?.topk?.length);
+  const hasPhotoIssue = hasBlockingPhotoIssue(scanResult?.quality?.issues || []);
 
   const selectedCandidate = useMemo(() => {
     if (!scanResult || !activeLabel) return null;
@@ -85,15 +95,27 @@ function ScanProducts() {
   const parsedCalories =
     editedCaloriesInput.trim() === "" ? null : Math.max(0, Math.round(Number(editedCaloriesInput)));
   const confidenceText =
-    isManualOverride && !selectedCandidate
+    requiresConfirmation
+      ? hasSuggestedMatches
+        ? "Review needed"
+        : "Not confident"
+      : isManualOverride && !selectedCandidate
       ? "Edited by you"
       : percent(selectedCandidate?.score ?? scanResult?.confidence);
-  const photoQualityText = scanResult?.quality?.passed ? "Good photo" : "Try another photo";
+  const photoQualityText = hasPhotoIssue ? "Try another photo" : "Good enough";
   const hasNutritionEstimate = nutritionPreview?.estimated_calories != null;
-  const displayMealName = nutritionPreview?.display_name || humanizeLabel(activeLabel);
+  const displayMealName =
+    nutritionPreview?.display_name || humanizeLabel(activeLabel) || "Choose a meal";
+  const scanReviewTitle = hasConfidentScanLabel
+    ? humanizeLabel(scanResult.label)
+    : hasSuggestedMatches
+    ? "Review suggested matches"
+    : "No confident food match";
   const mealAboutText =
     nutritionPreview?.about ||
-    "Detailed dish information is not available yet for this selection. You can still review the meal name and calories before saving.";
+    (activeLabel
+      ? "Detailed dish information is not available yet for this selection. You can still review the meal name and calories before saving."
+      : "AI is not confident enough to choose a dish from this image. Pick one of the suggestions only if it looks right, or type the meal name yourself.");
   const servingHint = nutritionPreview
     ? nutritionPreview.available
       ? nutritionPreview.serving_description
@@ -228,17 +250,23 @@ function ScanProducts() {
 
     try {
       const data = await scanSingleImage(uploadedImage, { topk: 3 });
-      const defaultLabel = data.label || data.topk?.[0]?.label || "";
-      const defaultPreview = normalizeNutritionPreview(defaultLabel, data.nutrition);
+      const defaultLabel = data.is_unclear ? "" : data.label || data.topk?.[0]?.label || "";
+      const defaultPreview = defaultLabel
+        ? normalizeNutritionPreview(defaultLabel, data.nutrition)
+        : null;
       setScanResult(data);
       setSelectedLabel(defaultLabel);
       setManualLabelInput(defaultLabel);
-      setSuggestedNutrition({
-        [nutritionKey(defaultLabel)]: defaultPreview,
-      });
+      setSuggestedNutrition(
+        defaultLabel
+          ? {
+              [nutritionKey(defaultLabel)]: defaultPreview,
+            }
+          : {}
+      );
       setNutritionPreview(defaultPreview);
       setEditedCaloriesInput(
-        data.nutrition?.estimated_calories != null ? String(data.nutrition.estimated_calories) : ""
+        defaultPreview?.estimated_calories != null ? String(defaultPreview.estimated_calories) : ""
       );
 
       const suggestionLabels = (data.topk || [])
@@ -247,7 +275,7 @@ function ScanProducts() {
 
       suggestionLabels.forEach((label) => {
         void loadNutritionForLabel(label, {
-          applyResult: nutritionKey(label) === nutritionKey(defaultLabel),
+          applyResult: Boolean(defaultLabel) && nutritionKey(label) === nutritionKey(defaultLabel),
         });
       });
     } catch (error) {
@@ -412,10 +440,12 @@ function ScanProducts() {
           <div className="scan-review-banner">
             <div>
               <span className="scan-review-kicker">AI suggestion</span>
-              <h3>{humanizeLabel(scanResult.label)}</h3>
+              <h3>{scanReviewTitle}</h3>
               <p>
                 {requiresConfirmation
-                  ? "This photo looks close to a few dishes. Review the suggested meal, calories, and dish info before saving."
+                  ? hasSuggestedMatches
+                    ? "AI found possible matches but is not confident enough to confirm one automatically. Pick a suggestion if it looks right, or type the meal name yourself."
+                    : "AI is not confident enough to confirm a dish from this image. Try another photo or type the meal name yourself."
                   : "This looks like a strong match. You can still adjust the meal name or calories if the serving looks different."}
               </p>
             </div>
@@ -528,7 +558,7 @@ function ScanProducts() {
                   onClick={() => handleCandidateSelect(item.label)}
                 >
                   <span>{humanizeLabel(item.label)}</span>
-                  <strong>{percent(item.score)}</strong>
+                  <strong>{requiresConfirmation ? "Review" : percent(item.score)}</strong>
                 </button>
               ))}
               </div>
