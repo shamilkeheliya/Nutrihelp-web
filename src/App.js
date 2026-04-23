@@ -61,32 +61,30 @@ import Community from "./routes/Community/Community";
 import ChatPage from "./routes/chat/ChatPage";
 import PostDetail from "./routes/Community/PostDetail";
 import ScanBarcode from "./routes/ScanBarcode/ScanBarcode";
+import FoodDetails from "./routes/UI-Only-Pages/ScanProducts/FoodDetails";
+import UploadHistory from "./routes/UI-Only-Pages/ScanProducts/UploadHistory";
 import AuthCallback from "./pages/AuthCallback";
 import DailyPlanEdit from "./routes/DailyPlan/DailyPlanEdit";
 import Account from "./routes/Account/Account.js";
+import TextToSpeechControl from "./components/TextToSpeech/TextToSpeech";
+import { isAuthPath } from "./utils/ttsRouteUtils";
 /* -------------------------------
-   NAVBAR WRAPPER (HIDE ON ROUTES)
+   GLOBAL AUTHENTICATED LAYOUT
 -------------------------------- */
-function NavbarWrapper() {
+function GlobalAuthenticatedLayout() {
   const location = useLocation();
+  const { currentUser } = useContext(UserContext);
 
-  const hideNavbarRoutes = [
-    "/login",
-    "/signup",
-    "/forgot",
-    "/forgotpassword",
-    "/forgot/verify",
-    "/forgot/reset",
-    "/mfaform",
-  ];
+  const shouldHideGlobalControls = isAuthPath(location.pathname);
 
-  const currentPath = location.pathname.toLowerCase();
+  if (shouldHideGlobalControls) return null;
 
-  const shouldHideNavbar = hideNavbarRoutes.some((route) =>
-    currentPath.startsWith(route)
+  return (
+    <>
+      <MainNavbar />
+      {currentUser ? <TextToSpeechControl /> : null}
+    </>
   );
-
-  return shouldHideNavbar ? null : <MainNavbar />;
 }
 
 import WeeklyMealPlanPage from './routes/Meal/WeeklyMealPlanPage';
@@ -101,7 +99,7 @@ function App() {
   return (
     <Router>
       {/* Show navbar only on allowed pages */}
-      <NavbarWrapper />
+      <GlobalAuthenticatedLayout />
 
       <ToastContainer />
 
@@ -219,6 +217,22 @@ function App() {
           element={
             <AuthenticateRoute>
               <ScanProducts />
+            </AuthenticateRoute>
+          }
+        />
+        <Route
+          path="food-details/:foodName"
+          element={
+            <AuthenticateRoute>
+              <FoodDetails />
+            </AuthenticateRoute>
+          }
+        />
+        <Route
+          path="upload-history"
+          element={
+            <AuthenticateRoute>
+              <UploadHistory />
             </AuthenticateRoute>
           }
         />

@@ -1,16 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
+import { useNavigate } from 'react-router-dom';
 import './ScanProducts.css';
 import SubHeading from '../../../components/general_components/headings/SubHeading';
+import { toast } from 'react-toastify';
+import FieldError from '../../../components/FieldError';
+import scanApi from '../../../services/scanApi';
 
 function ScanProducts() {
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  // Task 2: Refactor upload state to multi-file-ready model
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [history, setHistory] = useState([]);
+  const [error, setError] = useState(null);
+  const [touched, setTouched] = useState(false);
   const fileInputRef = useRef(null);
 
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedHistory = localStorage.getItem('uploadHistory');
@@ -20,90 +25,124 @@ function ScanProducts() {
   }, []);
 
   const handleFileUploadChange = (e) => {
-    const file = e.target.files[0];
-    setUploadedImage(file);
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      // Keep support for single-image while allowing multi-image in state
+      setUploadedFiles(files);
+      setError(null);
+      setTouched(true);
+    }
   };
 
   const handleImageUpload = async () => {
+    if (uploadedFiles.length === 0) {
+      setError("Please select at least one image.");
+      setTouched(true);
+      return;
+    }
+
+    // Task 5: Add UI states: submitting/loading, disable button
+    setIsSubmitting(true);
+    setError(null);
+
     try {
-      // Create FormData object to send image file
-      const formData = new FormData();
-      formData.append('image', uploadedImage);
+      // Task 1 & 3: Use centralized service and request builder
+      // Currently using single file upload (isMulti = false) for backward compatibility
+      const result = await scanApi.uploadForAnalysis(uploadedFiles, false);
 
-      // Make POST request to backend API
-      const response = await fetch('http://localhost:80/api/imageClassification', {
-        method: 'POST',
-        body: formData,
-      });
+      // Task 4: Use normalized response
+      const prediction = result.prediction;
 
-      // Check the response status
-      if (response.ok) {
-        const data = await response.json();
-        const prediction = data.prediction;
+      // Update history in localStorage
+      const newEntry = {
+        time: new Date().toLocaleString(),
+        imageName: uploadedFiles[0].name,
+        prediction: prediction,
+      };
+      
+      const updatedHistory = [...history, newEntry];
+      setHistory(updatedHistory);
+      localStorage.setItem('uploadHistory', JSON.stringify(updatedHistory));
 
-        // Update history in localStorage with recognized food
-        const newEntry = {
-          time: new Date().toLocaleString(),
-          imageName: uploadedImage.name,
-          prediction: prediction,
-        };
-        const updatedHistory = [...history, newEntry];
-        setHistory(updatedHistory);
-        localStorage.setItem('uploadHistory', JSON.stringify(updatedHistory));
-
-        // Redirect to the food details page with the recognized food name
-        navigate(`/food-details/${prediction}`);
-      } else {
-        alert('Failed to classify image. Please try again.');
-      }
-    } catch (error) {
-      // Handle errors
-      console.error('Error classifying image:', error.message);
-      alert('Failed to classify image. An error occurred.');
+      // Task 6: Fix post-upload navigation
+      toast.success(`Classification successful: ${prediction}`);
+      navigate(`/food-details/${prediction}`);
+      
+    } catch (err) {
+      // Task 5: Handle backend and network errors
+      console.error('Error classifying image:', err);
+      const errorMessage = err.message || 'An error occurred during classification.';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleViewHistory = () => {
-    navigate('/upload-history'); // Use navigate to go to history page
+    navigate('/upload-history');
   };
+
+  const handleRetry = () => {
+    handleImageUpload();
+  };
+
+  // Helper to get first file for display
+  const primaryFile = uploadedFiles[0];
 
   return (
     <div>
       <div className="scan-products-container">
         <h1>Upload a Photo</h1>
-          {/* Select image */}
-          <div className="scan-products-form">
-            <label className="scan-products-label">Image</label>
-            <div className="upload-section" onClick={() => fileInputRef.current?.click()} style={{ cursor: 'pointer' }}>
-              <p>Click to Upload Image</p>
-              <input 
-                ref={fileInputRef}
-                id="file-upload" 
-                type="file" 
-                onChange={handleFileUploadChange}
-                style={{ display: 'none' }}
-              />
-              {uploadedImage && (
-                <p className="file-name">
-                  {/* Displays if there is an image selected (displays the image name) */}
-                  Image added: {uploadedImage.name}
-                </p>
-              )}
-            </div>
+        <div className="scan-products-form">
+          <label className="scan-products-label" htmlFor="file-upload">Image</label>
+          <div 
+            className={`upload-section ${error && touched ? 'error-border' : ''} ${isSubmitting ? 'upload-disabled' : ''}`} 
+            onClick={() => !isSubmitting && fileInputRef.current?.click()} 
+            style={{ cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
+          >
+            <p>{isSubmitting ? 'Uploading...' : 'Click to Upload Image'}</p>
+            <input
+              ref={fileInputRef}
+              id="file-upload"
+              type="file"
+              onChange={handleFileUploadChange}
+              style={{ display: 'none' }}
+              disabled={isSubmitting}
+              accept="image/*"
+              multiple
+            />
+            {uploadedFiles.length > 0 && (
+              <p className="file-name">
+                {uploadedFiles.length === 1 
+                  ? `Image added: ${primaryFile.name}`
+                  : `${uploadedFiles.length} images selected`}
+              </p>
+            )}
           </div>
+          <FieldError error={error} touched={touched} />
+        </div>
 
-          {/* Upload button */}
-          <button className="upload-button" onClick={handleImageUpload}>
-            Upload Image
+        {/* Task 5: Submit button with loading state */}
+        <button 
+          className="upload-button" 
+          onClick={handleImageUpload}
+          disabled={isSubmitting || uploadedFiles.length === 0}
+        >
+          {isSubmitting ? 'Processing...' : 'Analyze Image'}
+        </button>
+
+        {/* Task 5: Retry button on failure */}
+        {error && !isSubmitting && uploadedFiles.length > 0 && (
+          <button className="retry-button" onClick={handleRetry} style={{ marginTop: '10px' }}>
+            Retry Upload
           </button>
+        )}
       </div>
 
-
-
-        {/* View History Button */}
-        <button className="view-history-button" onClick={handleViewHistory}>
-          View Upload History
-        </button>
+      <button className="view-history-button" onClick={handleViewHistory} disabled={isSubmitting}>
+        View Upload History
+      </button>
     </div>
   );
 }
