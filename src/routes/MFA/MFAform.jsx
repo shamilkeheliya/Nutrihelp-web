@@ -16,6 +16,8 @@ export default function MFAform() {
   const location = useLocation()
   const { currentUser, setCurrentUser } = useContext(UserContext)
 
+  const unwrapApiData = (payload) => (payload && typeof payload === "object" && "data" in payload ? payload.data : payload)
+
   // prefer explicit email/password passed from previous route, otherwise use user.email (if available)
   const { email: locEmail, password: locPassword } = location.state || {}
   const email = locEmail || currentUser?.email || ""
@@ -98,10 +100,11 @@ export default function MFAform() {
       })
 
       const data = await resp.json().catch(() => ({}))
+      const payload = unwrapApiData(data)
 
       if (resp.ok) {
-        const user = data.user
-        const token = data.token
+        const user = payload?.user || data.user
+        const token = payload?.token || data.token
 
         if (!user || !token) {
           setError("Login session is incomplete. Please try signing in again.")
@@ -162,7 +165,9 @@ export default function MFAform() {
       })
       if (resp.ok) {
         // backend responded OK
-        alert("Code resent to your email.")
+        const data = await resp.json().catch(() => ({}))
+        const payload = unwrapApiData(data)
+        alert(payload?.message || data.message || "Code resent to your email.")
       } else {
         const data = await resp.json().catch(() => ({}))
         const errMsg = data.error || "Failed to resend code"
