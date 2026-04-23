@@ -68,6 +68,8 @@ export default function Login() {
   const { darkMode } = useDarkMode()
   const navigate = useNavigate()
 
+  const unwrapApiData = (payload) => (payload && typeof payload === "object" && "data" in payload ? payload.data : payload)
+
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return emailRegex.test(email)
@@ -112,10 +114,11 @@ export default function Login() {
       })
 
       const data = await res.json()
+      const payload = unwrapApiData(data)
 
       // Handle MFA required (202 status) - redirect to MFA page
       if (res.status === 202) {
-        toast.info(data.message || "MFA token sent to your email")
+        toast.info(payload?.message || data.message || "MFA token sent to your email")
         navigate("/mfa", { state: { email: email.trim().toLowerCase(), password } })
         return
       }
@@ -125,8 +128,8 @@ export default function Login() {
         return
       }
 
-      const user = data.user
-      const token = data.token
+      const user = payload?.user || data.user
+      const token = payload?.token || data.token
 
       // ✅ Save session with JWT token
       const userSession = {

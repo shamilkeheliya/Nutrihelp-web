@@ -380,6 +380,41 @@ async function readApiError(response, fallbackMessage) {
   }
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchWithRetry(
+  url,
+  options = {},
+  {
+    attempts = 3,
+    retryStatuses = [408, 429, 500, 502, 503, 504],
+  } = {}
+) {
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const response = await fetch(url, options);
+      if (response.ok) return response;
+
+      if (attempt < attempts && retryStatuses.includes(response.status)) {
+        await sleep(120 * attempt);
+        continue;
+      }
+
+      return response;
+    } catch (error) {
+      lastError = error;
+      if (attempt === attempts) break;
+      await sleep(120 * attempt);
+    }
+  }
+
+  throw lastError || new Error("Network request failed");
+}
+
 export default function FoodPreferences() {
   const [allergyOptions, setAllergyOptions] = useState([]);
   const [dietaryOptions, setDietaryOptions] = useState([]);
@@ -416,123 +451,134 @@ export default function FoodPreferences() {
       const { token } = getSession();
 
       try {
-        const [
-          allergyRes,
-          dietaryRes,
-          cuisineRes,
-          dislikeRes,
-          healthConditionRes,
-          spiceLevelRes,
-          cookingMethodRes,
-          preferenceRes,
-        ] = await Promise.all([
-          fetch(`${API_BASE}/api/fooddata/allergies`),
-          fetch(`${API_BASE}/api/fooddata/dietaryrequirements`),
-          fetch(`${API_BASE}/api/fooddata/cuisines`),
-          fetch(`${API_BASE}/api/fooddata/ingredients`),
-          fetch(`${API_BASE}/api/fooddata/healthconditions`),
-          fetch(`${API_BASE}/api/fooddata/spicelevels`),
-          fetch(`${API_BASE}/api/fooddata/cookingmethods`),
-          token
-            ? fetch(`${API_BASE}/api/user/preferences`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              })
-            : Promise.resolve(null),
-        ]);
+        const optionRequests = [
+          {
+            key: "allergies",
+            url: `${API_BASE}/api/fooddata/allergies`,
+            parser: parseAllergyOptions,
+            setter: setAllergyOptions,
+            fallbackError: "Failed to load allergy options",
+          },
+          {
+            key: "dietary requirements",
+            url: `${API_BASE}/api/fooddata/dietaryrequirements`,
+            parser: parseDietaryOptions,
+            setter: setDietaryOptions,
+            fallbackError: "Failed to load dietary requirement options",
+          },
+          {
+            key: "cuisines",
+            url: `${API_BASE}/api/fooddata/cuisines`,
+            parser: parseNamedOptions,
+            setter: setCuisineOptions,
+            fallbackError: "Failed to load cuisine options",
+          },
+          {
+            key: "ingredients",
+            url: `${API_BASE}/api/fooddata/ingredients`,
+            parser: parseNamedOptions,
+            setter: setDislikeOptions,
+            fallbackError: "Failed to load ingredient options",
+          },
+          {
+            key: "health conditions",
+            url: `${API_BASE}/api/fooddata/healthconditions`,
+            parser: parseNamedOptions,
+            setter: setHealthConditionOptions,
+            fallbackError: "Failed to load health condition options",
+          },
+          {
+            key: "spice levels",
+            url: `${API_BASE}/api/fooddata/spicelevels`,
+            parser: parseNamedOptions,
+            setter: setSpiceLevelOptions,
+            fallbackError: "Failed to load spice level options",
+          },
+          {
+            key: "cooking methods",
+            url: `${API_BASE}/api/fooddata/cookingmethods`,
+            parser: parseNamedOptions,
+            setter: setCookingMethodOptions,
+            fallbackError: "Failed to load cooking method options",
+          },
+        ];
 
-        if (!allergyRes.ok) {
-          throw new Error("Failed to load allergy options");
-        }
+        const optionResults = await Promise.allSettled(
+          optionRequests.map(async (request) => {
+            const response = await fetchWithRetry(request.url);
+            if (!response.ok) {
+              const reason = await readApiError(response, request.fallbackError);
+              throw new Error(reason);
+            }
 
-        if (!dietaryRes.ok) {
-          throw new Error("Failed to load dietary requirement options");
-        }
+            const payload = await response.json();
+            return {
+              request,
+              rows: request.parser(payload),
+            };
+          })
+        );
 
-        if (!cuisineRes.ok) {
-          throw new Error("Failed to load cuisine options");
-        }
-
-        if (!dislikeRes.ok) {
-          throw new Error("Failed to load ingredient options");
-        }
-
-        if (!healthConditionRes.ok) {
-          throw new Error("Failed to load health condition options");
-        }
-
-        if (!spiceLevelRes.ok) {
-          throw new Error("Failed to load spice level options");
-        }
-
-        if (!cookingMethodRes.ok) {
-          throw new Error("Failed to load cooking method options");
-        }
-
-        const [
-          allergyRows,
-          dietaryRows,
-          cuisineRows,
-          dislikeRows,
-          healthConditionRows,
-          spiceLevelRows,
-          cookingMethodRows,
-        ] = await Promise.all([
-          allergyRes.json(),
-          dietaryRes.json(),
-          cuisineRes.json(),
-          dislikeRes.json(),
-          healthConditionRes.json(),
-          spiceLevelRes.json(),
-          cookingMethodRes.json(),
-        ]);
-
+        const optionFailures = [];
         if (mounted) {
-          setAllergyOptions(parseAllergyOptions(allergyRows));
-          setDietaryOptions(parseDietaryOptions(dietaryRows));
-          setCuisineOptions(parseNamedOptions(cuisineRows));
-          setDislikeOptions(parseNamedOptions(dislikeRows));
-          setHealthConditionOptions(parseNamedOptions(healthConditionRows));
-          setSpiceLevelOptions(parseNamedOptions(spiceLevelRows));
-          setCookingMethodOptions(parseNamedOptions(cookingMethodRows));
+          optionRequests.forEach(({ setter }) => setter([]));
+
+          optionResults.forEach((result, index) => {
+            if (result.status === "fulfilled") {
+              result.value.request.setter(result.value.rows);
+              return;
+            }
+
+            const fallback = optionRequests[index].fallbackError;
+            const reason = result.reason?.message || fallback;
+            optionFailures.push(reason);
+          });
         }
 
-        if (!preferenceRes) {
+        let preferenceError = "";
+
+        if (!token) {
           if (mounted) setPreferencesLoaded(true);
-          return;
-        }
-
-        if (preferenceRes.ok) {
-          const preferenceData = await preferenceRes.json();
-
-          if (!mounted) return;
-
-          setSelectedAllergyIds(toIdArray(preferenceData?.allergies));
-          setSelectedDietaryIds(toIdArray(preferenceData?.dietary_requirements));
-          setSelectedCuisineIds(toIdArray(preferenceData?.cuisines));
-          setSelectedDislikeIds(toIdArray(preferenceData?.dislikes));
-          setSelectedHealthConditionIds(toIdArray(preferenceData?.health_conditions));
-          setSelectedSpiceLevelIds(toIdArray(preferenceData?.spice_levels));
-          setSelectedCookingMethodIds(toIdArray(preferenceData?.cooking_methods));
-          setPreferencesLoaded(true);
-          return;
-        }
-
-        if (preferenceRes.status === 401) {
-          throw new Error("Session expired or invalid. Please sign in again.");
-        }
-
-        if (preferenceRes.status !== 403 && preferenceRes.status !== 404) {
-          const reason = await readApiError(
-            preferenceRes,
-            "Failed to load current user preferences"
+        } else {
+          const preferenceRes = await fetchWithRetry(
+            `${API_BASE}/api/user/preferences`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
-          throw new Error(reason);
+
+          if (preferenceRes.ok) {
+            const preferenceData = await preferenceRes.json();
+
+            if (mounted) {
+              setSelectedAllergyIds(toIdArray(preferenceData?.allergies));
+              setSelectedDietaryIds(toIdArray(preferenceData?.dietary_requirements));
+              setSelectedCuisineIds(toIdArray(preferenceData?.cuisines));
+              setSelectedDislikeIds(toIdArray(preferenceData?.dislikes));
+              setSelectedHealthConditionIds(toIdArray(preferenceData?.health_conditions));
+              setSelectedSpiceLevelIds(toIdArray(preferenceData?.spice_levels));
+              setSelectedCookingMethodIds(toIdArray(preferenceData?.cooking_methods));
+              setPreferencesLoaded(true);
+            }
+          } else if (preferenceRes.status === 401) {
+            preferenceError = "Session expired or invalid. Please sign in again.";
+            if (mounted) setPreferencesLoaded(false);
+          } else if (preferenceRes.status === 403 || preferenceRes.status === 404) {
+            if (mounted) setPreferencesLoaded(true);
+          } else {
+            preferenceError = await readApiError(
+              preferenceRes,
+              "Failed to load current user preferences"
+            );
+            if (mounted) setPreferencesLoaded(false);
+          }
         }
 
         if (mounted) {
-          setPreferencesLoaded(true);
+          const mergedErrors = [...optionFailures, preferenceError].filter(Boolean);
+          setErrorMessage(mergedErrors[0] || "");
         }
       } catch (error) {
         if (mounted) {

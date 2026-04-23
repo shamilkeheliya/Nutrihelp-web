@@ -2,7 +2,7 @@
 
 body {
   background-color: var(--background-color);
-  margin-top: 90px;
+  margin-top: 0;
   padding: 0;
   font-family: sans-serif;
 }
@@ -57,8 +57,8 @@ body {
 
 .today-align-grid {
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr; 
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
