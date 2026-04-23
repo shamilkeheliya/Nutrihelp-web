@@ -12,6 +12,7 @@ import { UserContext } from "../../context/user.context"
 import { useDarkMode } from "../DarkModeToggle/DarkModeContext"
 import { supabase } from "../../supabaseClient"
 import { useNavigate, useLocation } from "react-router-dom"
+import { API_BASE_URL } from "../../utils/authApi"
 
 function startInactivityWatcher({ enabled, seconds = 30, onTimeout }) {
   if (window.__idleInterval) {
@@ -66,7 +67,6 @@ export default function Login() {
   const { setCurrentUser } = useContext(UserContext)
   const { darkMode } = useDarkMode()
   const navigate = useNavigate()
-  const API_BASE = "http://localhost:80"
 
   const unwrapApiData = (payload) => (payload && typeof payload === "object" && "data" in payload ? payload.data : payload)
 
@@ -107,7 +107,7 @@ export default function Login() {
 
     try {
       // ✅ Use backend API for login (matches backend's bcrypt-based auth)
-      const res = await fetch(`${API_BASE}/api/login`, {
+      const res = await fetch(`${API_BASE_URL}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
