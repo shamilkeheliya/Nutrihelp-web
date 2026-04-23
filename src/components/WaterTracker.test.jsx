@@ -74,25 +74,30 @@ describe('WaterTracker Component', () => {
     const increaseBtn = screen.getByLabelText('Increase water glasses');
 
     // 0 is sad
-    expect(screen.getByText('😢')).toBeInTheDocument();
+    expect(screen.getByLabelText('Current hydration stage: sad')).toBeInTheDocument();
+    expect(screen.getByLabelText('Hydration level 0%')).toBeInTheDocument();
 
     // 3 is neutral
     for (let i = 0; i < 3; i++) {
       await act(async () => { fireEvent.click(increaseBtn); });
     }
-    expect(screen.getByText('😐')).toBeInTheDocument();
+    expect(screen.getByLabelText('Current hydration stage: neutral')).toBeInTheDocument();
+    expect(screen.getByLabelText('Hydration level 38%')).toBeInTheDocument();
 
     // 6 is excited
     for (let i = 0; i < 3; i++) {
       await act(async () => { fireEvent.click(increaseBtn); });
     }
-    expect(screen.getByText('😃')).toBeInTheDocument();
+    expect(screen.getByLabelText('Current hydration stage: excited')).toBeInTheDocument();
+    expect(screen.getByLabelText('Hydration level 75%')).toBeInTheDocument();
 
     // 8 is medal
     for (let i = 0; i < 2; i++) {
       await act(async () => { fireEvent.click(increaseBtn); });
     }
-    expect(screen.getByText('🏅')).toBeInTheDocument();
+    expect(screen.getByLabelText('Current hydration stage: medal')).toBeInTheDocument();
+    expect(screen.getByLabelText('Hydration level 100%')).toBeInTheDocument();
+    expect(screen.getByTestId('goal-confetti')).toBeInTheDocument();
   });
 
   test('saves to localStorage on increment', async () => {

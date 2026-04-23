@@ -2,6 +2,14 @@ import React, { useState, useEffect, useContext, useRef, useCallback } from "rea
 import { UserContext } from "../context/user.context";
 import "./WaterTracker.css";
 
+const DAILY_GOAL_CUPS = 8;
+const SETTINGS_NOTIFICATIONS_KEY = "notifications";
+const SETTINGS_NOTIFICATION_CACHE_KEY = "notificationPreferences";
+const REMINDER_COOLDOWN_MS = 2 * 60 * 60 * 1000; // At most 1 nudge every 2 hours
+const REMINDER_CHECK_INTERVAL_MS = 15 * 60 * 1000;
+const HYDRATION_WINDOW_START_HOUR = 8;
+const HYDRATION_WINDOW_END_HOUR = 22;
+
 const STAGES = {
   SAD: "sad",           // 0-2
   NEUTRAL: "neutral",   // 3-5
@@ -11,40 +19,33 @@ const STAGES = {
 
 const MESSAGES = {
   sad: [
-    "You need water! Start sipping.",
-    "Hydration is key. Drink up!",
-    "Your body is craving water.",
-    "Time for a water break!",
-    "Don't let yourself dry out."
+    "You need water start sipping 😟",
+    "Hydration is key drink up 💧",
+    "Your body is craving water 🥺",
+    "Time for a water break 😮‍💨",
+    "Don't let yourself dry out 💦"
   ],
   neutral: [
-    "Doing okay, keep going!",
-    "Halfway there. Sip sip!",
-    "You're on the right track.",
-    "Keep up the good hydration.",
-    "Water is life. Keep drinking."
+    "Doing okay keep going 🙂",
+    "Halfway there sip sip 🙂",
+    "You're on the right track 👍",
+    "Keep up the good hydration 😊",
+    "Water is life keep drinking 💧"
   ],
   excited: [
-    "Almost there! Just a bit more.",
-    "Great job, finish strong!",
-    "You're doing fantastic!",
-    "One or two more to reach your goal!",
-    "You are a hydration champion!"
+    "Almost there just a bit more 🚀",
+    "Great job finish strong 💪",
+    "You're doing fantastic 🌟",
+    "One or two more to reach your goal 🎯",
+    "You are a hydration champion 🏆"
   ],
   medal: [
-    "Goal achieved! Amazing job!",
-    "You crushed your daily goal!",
-    "Perfect hydration today!",
-    "Look at you go! Goal met.",
-    "Awesome work! You are fully hydrated."
+    "Goal achieved amazing job 🥳",
+    "You crushed your daily goal 🏅",
+    "Perfect hydration today 💧",
+    "Look at you go goal met 🎉",
+    "Awesome work you are fully hydrated 💙"
   ]
-};
-
-const EMOJIS = {
-  sad: "😢",
-  neutral: "😐",
-  excited: "😃",
-  medal: "🏅"
 };
 
 const getStage = (cups) => {
@@ -65,13 +66,115 @@ const getRandomMessage = (stage, prevMessageId) => {
 
 const getLocalDateString = () => new Date().toLocaleDateString();
 
+const getHydrationTargetByNow = (now = new Date()) => {
+  const dayStart = new Date(now);
+  dayStart.setHours(HYDRATION_WINDOW_START_HOUR, 0, 0, 0);
+
+  const dayEnd = new Date(now);
+  dayEnd.setHours(HYDRATION_WINDOW_END_HOUR, 0, 0, 0);
+
+  if (now <= dayStart) return 0;
+  if (now >= dayEnd) return DAILY_GOAL_CUPS;
+
+  const progress = (now.getTime() - dayStart.getTime()) / (dayEnd.getTime() - dayStart.getTime());
+  return Math.min(DAILY_GOAL_CUPS, Math.max(0, Math.floor(progress * DAILY_GOAL_CUPS)));
+};
+
+const readWaterReminderFlagFromSettings = () => {
+  try {
+    const notifications = JSON.parse(localStorage.getItem(SETTINGS_NOTIFICATIONS_KEY) || "{}");
+    if (typeof notifications.waterReminders === "boolean") {
+      return notifications.waterReminders;
+    }
+  } catch (_error) {
+    // Fallback below
+  }
+
+  try {
+    const cachedNotifications = JSON.parse(localStorage.getItem(SETTINGS_NOTIFICATION_CACHE_KEY) || "{}");
+    if (typeof cachedNotifications.waterReminders === "boolean") {
+      return cachedNotifications.waterReminders;
+    }
+  } catch (_error) {
+    // Fallback below
+  }
+
+  return true;
+};
+
+const writeWaterReminderFlagToSettings = (enabled) => {
+  const safeBoolean = Boolean(enabled);
+
+  try {
+    const notifications = JSON.parse(localStorage.getItem(SETTINGS_NOTIFICATIONS_KEY) || "{}");
+    localStorage.setItem(
+      SETTINGS_NOTIFICATIONS_KEY,
+      JSON.stringify({
+        ...notifications,
+        waterReminders: safeBoolean,
+      })
+    );
+  } catch (_error) {
+    localStorage.setItem(
+      SETTINGS_NOTIFICATIONS_KEY,
+      JSON.stringify({ waterReminders: safeBoolean })
+    );
+  }
+
+  try {
+    const cachedNotifications = JSON.parse(
+      localStorage.getItem(SETTINGS_NOTIFICATION_CACHE_KEY) || "{}"
+    );
+    localStorage.setItem(
+      SETTINGS_NOTIFICATION_CACHE_KEY,
+      JSON.stringify({
+        ...cachedNotifications,
+        waterReminders: safeBoolean,
+      })
+    );
+  } catch (_error) {
+    localStorage.setItem(
+      SETTINGS_NOTIFICATION_CACHE_KEY,
+      JSON.stringify({ waterReminders: safeBoolean })
+    );
+  }
+};
+
+const CONFETTI_COLORS = [
+  "#f43f5e",
+  "#f59e0b",
+  "#22c55e",
+  "#3b82f6",
+  "#a855f7",
+  "#06b6d4",
+  "#f97316",
+  "#eab308",
+];
+
+const CONFETTI_PIECES = Array.from({ length: 28 }, (_, index) => {
+  const angle = (index / 28) * Math.PI * 2;
+  const radius = 74 + (index % 5) * 10;
+
+  return {
+    x: `${Math.round(Math.cos(angle) * radius)}px`,
+    y: `${Math.round(Math.sin(angle) * radius)}px`,
+    rotate: `${(index * 29) % 360}deg`,
+    spin: `${index % 2 === 0 ? 240 + (index % 4) * 40 : -(240 + (index % 4) * 40)}deg`,
+    delay: `${(index % 6) * 0.03}s`,
+    duration: `${1.25 + (index % 5) * 0.14}s`,
+    color: CONFETTI_COLORS[index % CONFETTI_COLORS.length],
+  };
+});
+
 const WaterTracker = () => {
   const { currentUser } = useContext(UserContext);
   const [glasses, setGlasses] = useState(0);
   const [stage, setStage] = useState(STAGES.SAD);
   const [message, setMessage] = useState(() => getRandomMessage(STAGES.SAD, null));
-  const [remindersEnabled, setRemindersEnabled] = useState(false);
+  const [remindersEnabled, setRemindersEnabled] = useState(() => readWaterReminderFlagFromSettings());
   const reminderTimerRef = useRef(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const confettiTimeoutRef = useRef(null);
 
   // Initialize from LocalStorage
   useEffect(() => {
@@ -89,12 +192,44 @@ const WaterTracker = () => {
             userId,
             glasses: 0
           }));
+          setGlasses(0);
         }
       } catch (e) {
         console.error("Failed to parse water tracker data", e);
       }
+    } else {
+      const userId = currentUser ? currentUser.id : "guest";
+      localStorage.setItem("water_tracker_data", JSON.stringify({
+        date: today,
+        userId,
+        glasses: 0
+      }));
     }
   }, [currentUser]);
+
+  // Sync reminder flag from Settings storage
+  useEffect(() => {
+    const syncReminderFlag = () => {
+      setRemindersEnabled(readWaterReminderFlagFromSettings());
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        syncReminderFlag();
+      }
+    };
+
+    syncReminderFlag();
+    window.addEventListener("storage", syncReminderFlag);
+    window.addEventListener("focus", syncReminderFlag);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("storage", syncReminderFlag);
+      window.removeEventListener("focus", syncReminderFlag);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   // Persist and Sync to Backend
   const updateIntake = useCallback(async (newGlasses) => {
@@ -136,67 +271,174 @@ const WaterTracker = () => {
       setMessage(getRandomMessage(newStage, message.id));
       
       if (newStage === STAGES.MEDAL) {
+        setShowConfetti(true);
+        if (confettiTimeoutRef.current) {
+          clearTimeout(confettiTimeoutRef.current);
+        }
+        confettiTimeoutRef.current = setTimeout(() => {
+          setShowConfetti(false);
+        }, 2200);
         window.dispatchEvent(new CustomEvent('waterGoalReached', { detail: { glasses } }));
         console.log('Event: waterGoalReached');
+      } else {
+        setShowConfetti(false);
       }
     }
   }, [glasses, stage, message.id]);
 
+  useEffect(() => {
+    return () => {
+      if (confettiTimeoutRef.current) {
+        clearTimeout(confettiTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const increment = () => {
-    if (glasses < 8) updateIntake(glasses + 1);
+    if (glasses < DAILY_GOAL_CUPS) updateIntake(glasses + 1);
   };
 
   const decrement = () => {
     if (glasses > 0) updateIntake(glasses - 1);
   };
 
-  // Reminder Logic
+  // Reminder logic based on "behind schedule" and Settings > notifications.waterReminders
   useEffect(() => {
-    if (remindersEnabled) {
-      reminderTimerRef.current = setInterval(() => {
-        setGlasses((prev) => {
-           if (prev < 8) {
-               console.log("Hydration Reminder: Time to drink water!");
-               if ("Notification" in window && Notification.permission === "granted") {
-                   new Notification("Time to hydrate! 💧", { body: "Don't forget your daily water goal." });
-               } else {
-                   alert("Hydration Reminder: Time to drink water! 💧");
-               }
-           }
-           return prev; 
-        });
-      }, 60 * 60 * 1000); 
-    } else {
-      if (reminderTimerRef.current) clearInterval(reminderTimerRef.current);
-    }
-    return () => {
-      if (reminderTimerRef.current) clearInterval(reminderTimerRef.current);
-    };
-  }, [remindersEnabled]);
+    const maybeNotifyBehindSchedule = () => {
+      if (!remindersEnabled || glasses >= DAILY_GOAL_CUPS) return;
 
-  const toggleReminders = () => {
+      const now = new Date();
+      const expectedByNow = getHydrationTargetByNow(now);
+      const behindBy = expectedByNow - glasses;
+
+      if (behindBy <= 0) return;
+      if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+      const userId = currentUser?.id || "guest";
+      const today = getLocalDateString();
+      const reminderKey = `water_tracker_last_reminder:${userId}:${today}`;
+
+      const lastReminderAt = Number.parseInt(localStorage.getItem(reminderKey) || "0", 10);
+      if (Date.now() - (Number.isNaN(lastReminderAt) ? 0 : lastReminderAt) < REMINDER_COOLDOWN_MS) {
+        return;
+      }
+
+      const remaining = Math.max(0, DAILY_GOAL_CUPS - glasses);
+      new Notification("Hydration check-in 💧", {
+        body: `You're ${behindBy} cup${behindBy === 1 ? "" : "s"} behind. ${remaining} cup${remaining === 1 ? "" : "s"} left to hit today's goal.`,
+      });
+      localStorage.setItem(reminderKey, String(Date.now()));
+    };
+
     if (!remindersEnabled) {
-       if ("Notification" in window) {
-           Notification.requestPermission().then(permission => {
-               console.log("Notification permission:", permission);
-           });
-       }
+      if (reminderTimerRef.current) {
+        clearInterval(reminderTimerRef.current);
+        reminderTimerRef.current = null;
+      }
+      return () => {};
     }
-    setRemindersEnabled(!remindersEnabled);
-  };
+
+    maybeNotifyBehindSchedule();
+    reminderTimerRef.current = setInterval(maybeNotifyBehindSchedule, REMINDER_CHECK_INTERVAL_MS);
+
+    return () => {
+      if (reminderTimerRef.current) {
+        clearInterval(reminderTimerRef.current);
+        reminderTimerRef.current = null;
+      }
+    };
+  }, [glasses, remindersEnabled, currentUser]);
 
   const handleManualMessageUpdate = () => {
      setMessage(getRandomMessage(stage, message.id));
   };
 
+  const handleInlineReminderToggle = async () => {
+    const nextEnabled = !remindersEnabled;
+
+    if (nextEnabled && "Notification" in window && Notification.permission === "default") {
+      try {
+        await Notification.requestPermission();
+      } catch (_error) {
+        // Continue to save preference even if permission API throws.
+      }
+    }
+
+    writeWaterReminderFlagToSettings(nextEnabled);
+    setRemindersEnabled(nextEnabled);
+  };
+
+  const hydrationPercent = Math.max(
+    0,
+    Math.min(100, Math.round((glasses / DAILY_GOAL_CUPS) * 100))
+  );
+  const waterTranslateY = 100 - hydrationPercent;
+  const isGoalComplete = hydrationPercent === 100;
 
   return (
     <div className="water-tracker" aria-labelledby="tracker-heading">
-      <h3 id="tracker-heading">Daily Water Intake</h3>
+      <div className="hydration-coach-toggle" role="group" aria-label="Hydration reminder quick toggle">
+        <div className="coach-title">Hydration Coach 💧</div>
+        <label className="coach-switch">
+          <input
+            type="checkbox"
+            checked={remindersEnabled}
+            onChange={handleInlineReminderToggle}
+            aria-label="Enable hydration reminders"
+          />
+          <span className="coach-slider" />
+        </label>
+      </div>
+
+      <h3 id="tracker-heading" style={{ margin: "1.0em" }}>Daily Water Intake</h3>
       
       <div className={`emotion-display stage-${stage}`} aria-label={`Current hydration stage: ${stage}`}>
-        <div className={`emoji-visual ${stage === STAGES.MEDAL ? 'medal-animation' : ''}`}>
-           {EMOJIS[stage]}
+        <div className="hydration-orb-wrap">
+          {isGoalComplete && (
+            <>
+              <span className="orb-sparkle orb-sparkle-top-left" aria-hidden="true">✨</span>
+              <span className="orb-sparkle orb-sparkle-bottom-right" aria-hidden="true">✨</span>
+            </>
+          )}
+
+          {showConfetti && (
+            <div className="confetti-burst" data-testid="goal-confetti" aria-hidden="true">
+              {CONFETTI_PIECES.map((piece, index) => (
+                <span
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={index}
+                  className="confetti-piece"
+                  style={{
+                    "--tx": piece.x,
+                    "--ty": piece.y,
+                    "--rot": piece.rotate,
+                    "--spin": piece.spin,
+                    "--delay": piece.delay,
+                    "--duration": piece.duration,
+                    "--confetti-color": piece.color,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+
+          <div
+            className={`hydration-orb ${stage === STAGES.MEDAL ? "medal-animation" : ""}`}
+            role="img"
+            aria-label={`Hydration level ${hydrationPercent}%`}
+          >
+            <div
+              className="hydration-orb-water"
+              style={{ transform: `translateY(${waterTranslateY}%)` }}
+            >
+              <div className="orb-wave orb-wave-back" />
+              <div className="orb-wave orb-wave-front" />
+            </div>
+            <div className="hydration-orb-shine" />
+            <div className="hydration-orb-text" aria-hidden="true">
+              {hydrationPercent}%
+            </div>
+          </div>
         </div>
         <p className="microcopy" onClick={handleManualMessageUpdate} aria-live="polite">
           {message.text}
@@ -205,12 +447,12 @@ const WaterTracker = () => {
 
       <div className="tracker-controls">
         <button onClick={decrement} aria-label="Decrease water glasses">−</button>
-        <span data-testid="tracker-count" aria-live="polite" aria-atomic="true">{glasses} / 8</span>
-        <button onClick={increment} aria-label="Increase water glasses" disabled={glasses >= 8}>+</button>
+        <span data-testid="tracker-count" aria-live="polite" aria-atomic="true">{glasses} / {DAILY_GOAL_CUPS}</span>
+        <button onClick={increment} aria-label="Increase water glasses" disabled={glasses >= DAILY_GOAL_CUPS}>+</button>
       </div>
 
       <div className="glass-display">
-        {[...Array(8)].map((_, index) => (
+        {[...Array(DAILY_GOAL_CUPS)].map((_, index) => (
           <div
             key={index}
             className={`glass ${index < glasses ? "filled" : ""}`}
@@ -218,16 +460,15 @@ const WaterTracker = () => {
         ))}
       </div>
 
-      <div className="reminder-toggle" style={{ marginTop: '1.5em' }}>
-         <label>
-           <input 
-             type="checkbox" 
-             checked={remindersEnabled} 
-             onChange={toggleReminders} 
-             aria-label="Toggle hydration reminders"
-           />
-           Enable Reminders
-         </label>
+      <div className="reminder-status" style={{ marginTop: "1.5em" }} aria-live="polite">
+        <p>
+          Reminder status: <strong>{remindersEnabled ? "On" : "Off"}</strong>
+        </p>
+        <small>
+          {remindersEnabled
+            ? "Nudges are sent only when your intake is behind schedule."
+            : "Enable water reminders in Settings to receive hydration nudges."}
+        </small>
       </div>
     </div>
   );
