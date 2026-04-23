@@ -62,6 +62,8 @@ import Community from "./routes/Community/Community";
 import ChatPage from "./routes/chat/ChatPage";
 import PostDetail from "./routes/Community/PostDetail";
 import ScanBarcode from "./routes/ScanBarcode/ScanBarcode";
+import FoodDetails from "./routes/UI-Only-Pages/ScanProducts/FoodDetails";
+import UploadHistory from "./routes/UI-Only-Pages/ScanProducts/UploadHistory";
 import AuthCallback from "./pages/AuthCallback";
 import DailyPlanEdit from "./routes/DailyPlan/DailyPlanEdit";
 import Account from "./routes/Account/Account.js";
@@ -232,6 +234,22 @@ function App() {
           element={
             <AuthenticateRoute>
               <ScanProducts />
+            </AuthenticateRoute>
+          }
+        />
+        <Route
+          path="food-details/:foodName"
+          element={
+            <AuthenticateRoute>
+              <FoodDetails />
+            </AuthenticateRoute>
+          }
+        />
+        <Route
+          path="upload-history"
+          element={
+            <AuthenticateRoute>
+              <UploadHistory />
             </AuthenticateRoute>
           }
         />
