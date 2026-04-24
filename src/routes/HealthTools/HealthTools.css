@@ -1,18 +1,18 @@
 :root {
-  --color-primary: #005BBB;
+  --primary-color: #005BBB;
   --primary-hover: #003f8a;
-  --color-bg-page: #ffffff;
+  --background-color: #ffffff;
   --card-bg: #ffffff;
   --text-color: #333333;
   --heading-color: #1A1A1A;
-  --color-border: #e0e0e0;
+  --border-color: #e0e0e0;
   --success-color: #005BBB;
 }
 
 .dark-mode {
-  --card-bg: var(--card-card);
+  --card-bg: var(--card-background);
   --text-color: var(--text-secondary);
-  --heading-color: var(--color-text-primary);
+  --heading-color: var(--text-primary);
 }
 
 .health-tools {
@@ -22,7 +22,7 @@
   flex-direction: column;
   align-items: center;
   max-width: 1200px;
-  background-color: var(--color-bg-page);
+  background-color: var(--background-color);
 }
 
 .health-tools h1 {
@@ -95,7 +95,7 @@
   margin: 0 auto 32px;
   padding: 10px;
   background: #f4f7fb;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
@@ -144,7 +144,7 @@
   align-items: center;
   text-align: center;
   transition: transform 0.2s ease;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-color);
 }
 
 .card:hover {
@@ -163,7 +163,7 @@
   padding: 14px;
   margin-bottom: 16px;
   border-radius: 8px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-color);
   font-size: 1.1rem;
   color: var(--input-text);
   background-color: var(--input-background);
@@ -194,7 +194,7 @@
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  background-color: var(--color-primary);
+  background-color: var(--primary-color);
   color: var(--button-text);
   transition: background-color 0.3s ease, transform 0.1s ease;
 }

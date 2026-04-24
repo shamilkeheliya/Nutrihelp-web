@@ -1,7 +1,7 @@
 * { box-sizing: border-box; }
 
 body {
-  background-color: var(--color-bg-page);
+  background-color: var(--background-color);
   margin-top: 90px;
   padding: 0;
   font-family: sans-serif;
@@ -23,7 +23,7 @@ body {
   font-size: clamp(1.25rem, 4.5vw, 1.875rem) !important;
   line-height: 1.3;
   margin-top: 10px;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
 }
 
 .Title h2 {
@@ -66,7 +66,7 @@ body {
   text-align: center;    
   font-size: clamp(0.875rem, 3.5vw, 1.125rem);
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
 }
 
 .today-row-spacer {}
@@ -95,8 +95,8 @@ body {
   gap: 12px;  
   padding: 8px;
   border-radius: 16px;
-  background: var(--card-card);  
-  border: 2px solid var(--color-border);
+  background: var(--card-background);  
+  border: 2px solid var(--border-color);
   margin: 0 0 12px 0;
   box-shadow: var(--card-shadow);
 }
@@ -119,16 +119,16 @@ body {
 /* Hover effect */
 .nav-tab-btn:hover {
   background: var(--background-hover);
-  color: var(--color-primary);
-  border-color: var(--color-border);
+  color: var(--primary-color);
+  border-color: var(--border-color);
 }
 
 /* Active tab button */
 .nav-tab-btn.active {
-  background: var(--color-primary);
+  background: var(--primary-color);
   color: var(--text-inverse);
   font-weight: 700;
-  border-color: var(--color-primary);
+  border-color: var(--primary-color);
   box-shadow: 0 4px 8px rgba(0, 91, 187, 0.2);
 }
 
@@ -141,7 +141,7 @@ body {
 
 .meal-scroll-wrapper::-webkit-scrollbar { height: 6px; }
 .meal-scroll-wrapper::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: var(--border-color);
   border-radius: 10px;
 }
 
@@ -205,7 +205,7 @@ body {
   position: absolute;
   right: 20px;
   top: 20px;
-  background-color: var(--color-primary);
+  background-color: var(--primary-color);
   color: var(--text-inverse);
   border: none;
   border-radius: 50px;

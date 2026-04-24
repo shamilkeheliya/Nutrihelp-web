@@ -28,7 +28,7 @@ function WeeklyMealPlanPage() {
   return (
     <div style={{ 
       padding: 'clamp(10px, 3vw, 20px)',
-      backgroundColor: 'var(--color-bg-page)',
+      backgroundColor: 'var(--background-color)',
       minHeight: '100vh',
       maxWidth: '100%', 
       boxSizing: 'border-box' 
@@ -38,7 +38,7 @@ function WeeklyMealPlanPage() {
         style={{
           background: 'none',
           border: 'none',
-          color: 'var(--color-primary)',
+          color: 'var(--primary-color)',
           fontSize: '1rem',
           fontWeight: '600',
           cursor: 'pointer',
@@ -50,14 +50,14 @@ function WeeklyMealPlanPage() {
           transition: 'color 0.2s ease'
         }}
         onMouseEnter={(e) => e.target.style.color = 'var(--primary-hover)'}
-        onMouseLeave={(e) => e.target.style.color = 'var(--color-primary)'}
+        onMouseLeave={(e) => e.target.style.color = 'var(--primary-color)'}
       >
         <span style={{ fontSize: '1.125rem' }}>←</span>
         <span>Back to Meals</span>
       </button>
       <h2 style={{ 
         textAlign: "center", 
-        color: 'var(--color-text-primary)',
+        color: 'var(--text-primary)',
         fontSize: "clamp(1.375rem, 4vw, 2.25rem)",  
         lineHeight: 1.3,
         margin: "0 0 20px 0"

@@ -5,17 +5,15 @@
   width: 100%;
   z-index: 1000;
   padding: 12px 16px;
-  background-color: var(--color-card);
+  background-color: var(--nav-background);
   transition: background-color 0.25s ease-in-out;
-  box-shadow: var(--shadow-sm);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--card-shadow);
 }
 
 .main-header.scrolled {
-  background: var(--color-card);
+  background: var(--nav-background);
   backdrop-filter: blur(8px);
-  box-shadow: var(--shadow-sm);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--card-shadow-hover);
 }
 
 /* FULL WIDTH */
@@ -62,14 +60,14 @@
   height: 44px;
   padding: 0 14px;
   border-radius: 999px;
-  border: 1px solid var(--color-border);
-  background: var(--color-card);
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  background: #ffffff;
   cursor: pointer;
   font-size: 16px;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
 }
 .nav-mobile-menu-btn:hover {
-  background: var(--color-bg-secondary);
+  background: #f3f4f6;
 }
 .nav-mobile-menu-label {
   font-weight: 600;
@@ -94,7 +92,7 @@
   text-decoration: none;
   font-size: 18px;
   line-height: 1;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
   background: transparent;
   cursor: pointer;
   transition: background-color 0.15s ease, border-color 0.15s ease;
@@ -102,9 +100,9 @@
 
 .nav-link:hover,
 .nav-button:hover {
-  background: var(--color-bg-secondary);
-  border-color: var(--color-border);
-  color: var(--color-text-primary);
+  background: var(--background-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
 }
 
 .nav-icon {
@@ -127,15 +125,15 @@
 }
 
 .nav-assistant:hover {
-  background: var(--color-bg-secondary);
+  background: var(--background-secondary);
 }
 
 .dropdown-panel {
   position: absolute;
   top: 100%;
   right: 0;
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
   box-shadow: var(--dropdown-shadow);
   border-radius: 18px;
   padding: 10px;
@@ -157,16 +155,16 @@
   padding: 0 12px;
   border-radius: 12px;
   text-decoration: none;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
   font-size: 16px;
   background: transparent;
   border: 1px solid transparent;
 }
 
 .dropdown-item:hover {
-  background: var(--color-bg-secondary);
-  border-color: var(--color-border);
-  color: var(--color-text-primary);
+  background: var(--background-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
 }
 
 /* Mega menu */
@@ -175,7 +173,7 @@
   left: 0;
   min-width: 1100px;
   padding: 18px 18px 12px 18px;
-  background: var(--color-card);
+  background: var(--card-background);
 }
 
 .mega-menu-content {
@@ -193,15 +191,15 @@
 .mega-title {
   font-size: 18px;
   font-weight: 500;
-  color: var(--color-primary);
+  color: var(--primary-color);
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .mega-item {
   font-size: 16px;
   text-decoration: none;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
   padding: 10px 10px;
   border-radius: 12px;
   border: 1px solid transparent;
@@ -209,8 +207,8 @@
 }
 
 .mega-item:hover {
-  background: var(--color-bg-secondary);
-  border-color: var(--color-border);
+  background: var(--background-secondary);
+  border-color: var(--border-color);
 }
 
 .mega-footer {
@@ -229,7 +227,7 @@
   font-size: 16px;
   font-weight: 700;
   text-decoration: none;
-  color: var(--color-primary);
+  color: var(--primary-color);
 }
 
 /* Focus */
@@ -238,15 +236,15 @@
 .mobile-drawer button:focus,
 .mobile-drawer a:focus,
 .mobile-drawer input:focus {
-  outline: 3px solid var(--color-primary);
+  outline: 3px solid var(--primary-color);
   outline-offset: 2px;
 }
 
 /* Dark mode dropdown */
 .dark-mode .dropdown-panel,
 .dark-mode .mega-menu {
-  background: var(--color-card);
-  border-color: var(--color-border);
+  background: var(--card-background);
+  border-color: var(--border-color);
 }
 
 .dark-mode .dropdown-item,
@@ -255,11 +253,11 @@
 .dark-mode .mega-contact-btn,
 .dark-mode .nav-link,
 .dark-mode .nav-button {
-  color: var(--color-text-primary);
+  color: var(--text-primary);
 }
 
 .dark-mode .main-header {
-  background-color: var(--color-card);
+  background-color: var(--nav-background);
 }
 
 /* Mobile Drawer */
@@ -280,8 +278,8 @@
   left: 0;
   height: 100vh;
   width: min(86vw, 360px);
-  background: var(--color-bg-page);
-  border-right: 1px solid var(--color-border);
+  background: #fafafa;
+  border-right: 1px solid rgba(17, 24, 39, 0.12);
   box-shadow: 18px 0 42px rgba(0, 0, 0, 0.22);
   padding: 14px;
   overflow-y: auto;
@@ -301,7 +299,7 @@
 }
 
 .dark-mode .mobile-drawer {
-  background: var(--color-bg-page);
+  background: #111827;
   border-right-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -320,19 +318,19 @@
 .mobile-menu-title {
   font-size: 18px;
   font-weight: 800;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
 }
 
 .mobile-menu-close {
   height: 44px;
   width: 44px;
   border-radius: 12px;
-  border: 1px solid var(--color-border);
-  background: var(--color-card);
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  background: #fff;
   cursor: pointer;
 }
 .mobile-menu-close:hover {
-  background: var(--color-bg-secondary);
+  background: #f3f4f6;
 }
 
 .dark-mode .mobile-menu-close {
@@ -353,26 +351,26 @@
   height: 48px;
   padding: 0 12px;
   border-radius: 12px;
-  border: 1px solid var(--color-border);
-  background: var(--color-card);
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  background: #ffffff;
   cursor: pointer;
   font-size: 16px;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
   text-align: left;
 }
 
 .mobile-menu-item-assistant {
   font-size: 16px;
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
+  background: #ffffff;
+  border: 1px solid rgba(17, 24, 39, 0.12);
 }
 
 .mobile-menu-item-assistant:hover {
-  background: var(--color-primary-light);
+  background: rgba(37, 99, 235, 0.2);
 }
 
 .mobile-menu-item:hover {
-  background: var(--color-bg-secondary);
+  background: #f3f4f6;
 }
 
 .dark-mode .mobile-menu-item {
@@ -394,7 +392,7 @@
 /* Group blocks inside submenu pages */
 .mobile-menu-group {
   padding: 6px 0 10px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(17, 24, 39, 0.10);
 }
 .dark-mode .mobile-menu-group {
   border-top-color: rgba(255, 255, 255, 0.12);
@@ -402,7 +400,7 @@
 .mobile-menu-group-title {
   font-size: 14px;
   font-weight: 800;
-  color: var(--color-primary);
+  color: rgba(0, 91, 187, 0.95);
   padding: 10px 6px 6px;
 }
 

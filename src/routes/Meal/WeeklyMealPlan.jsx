@@ -44,7 +44,7 @@ const WeeklyMealPlan = ({ onExport, showExport = true }) => {
       width: '100%'
     }}>
       <h2 style={{ 
-        color: 'var(--color-text-primary)', 
+        color: 'var(--text-primary)', 
         textAlign: 'center',
         fontSize: "clamp(1.375rem, 4vw, 2.25rem)",
         lineHeight: 1.3,
@@ -57,7 +57,7 @@ const WeeklyMealPlan = ({ onExport, showExport = true }) => {
         <button
           onClick={onExport}
           style={{ 
-            backgroundColor: 'var(--color-primary)', 
+            backgroundColor: 'var(--primary-color)', 
             color: 'white', 
             border: 'none', 
             padding: '10px 20px', 

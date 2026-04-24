@@ -1,43 +1,42 @@
 .row {
-  margin-bottom: var(--space-lg);
+  margin-bottom: 20px;
 }
 
 .create-recipe-container {
-  background-color: var(--color-bg-secondary);
-  padding-top: var(--space-xl);
-  padding-bottom: var(--space-xl);
+  background-color: var(--background-secondary);
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 #recipe_input {
-  margin-bottom: 0;
+  margin-bottom: 0px;
 }
 
 .create-recipe-form {
   position: relative;
   width: 60%;
-  background-color: var(--color-card);
-  border-radius: var(--radius-lg);
+  background-color: var(--card-background);
+  border-radius: 15px;
   padding: 5% 10%;
   text-align: center;
   margin: auto;
-  margin-top: var(--space-xl);
+  margin-top: 50px;
   z-index: 2;
-  box-shadow: var(--shadow-md);
-}
+  box-shadow: var(--card-shadow);
 
-/* Keep nested classes (if using SCSS, else move outside) */
-.create-recipe-form .vector-bg-left {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-}
+  .vector-bg-left {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+  }
 
-.create-recipe-form .vector-bg-right {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: -1;
+  .vector-bg-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: -1;
+  }
 }
 
 .create-recipe-form-wrap {
@@ -46,7 +45,7 @@
 
 .form-section .ui.header {
   text-align: left;
-  color: var(--color-text-primary);
+  color: var(--text-heading);
 }
 
 .form-div {
@@ -60,27 +59,28 @@
 .single-line-number-input,
 .single-image-input {
   width: 100%;
-  border: 1px solid var(--color-border);
-  padding: var(--space-sm) var(--space-md);
-  background-color: var(--color-bg);
-  color: var(--color-text-primary);
+  border: 1px solid var(--border-color);
+  padding: 10px 15px;
+  background-color: var(--input-background);
+  color: var(--input-text);
 }
 
 .vertical-center {
   margin: 0;
   position: absolute;
   top: 50%;
+  -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
 
 .button-primary {
-  background-color: var(--color-primary) !important;
-  color: #fff !important;
-  border-radius: var(--radius-lg);
+  background-color: var(--button-background) !important;
+  color: var(--button-text) !important;
+  border-radius: 50px; /* Curvy corners */
 }
 
 .button-primary:hover {
-  background-color: var(--color-primary-hover);
+  opacity: 0.7;
 }
 
 .create-recipe-form-wrap .form-div {
@@ -92,8 +92,8 @@
   display: flex;
   width: 50%;
   justify-content: flex-end;
-  margin-top: var(--space-xl);
-  margin-bottom: var(--space-lg);
+  margin-top: 50px;
+  margin-bottom: 20px;
 }
 
 .button-div button {
@@ -101,7 +101,7 @@
 }
 
 .recipe-table {
-  font-family: var(--font-family);
+  font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
   margin-left: 0;
@@ -109,23 +109,23 @@
 
 .recipe-table td,
 .recipe-table th {
-  border: 1px solid var(--color-border);
-  padding: var(--space-sm);
-  color: var(--color-text-primary);
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  color: var(--text-primary);
 }
 
 .recipe-table tr:nth-child(even) {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--table-row-even);
 }
 
 .recipe-table tr:hover {
-  background-color: var(--color-card-hover);
+  background-color: var(--table-hover);
 }
 
 .recipe-table th {
-  padding-top: var(--space-sm);
-  padding-bottom: var(--space-sm);
+  padding-top: 12px;
+  padding-bottom: 12px;
   text-align: center;
-  background-color: var(--color-primary);
-  color: #fff;
+  background-color: var(--table-header-bg);
+  color: var(--text-inverse);
 }

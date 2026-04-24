@@ -1,7 +1,7 @@
 /* Post Detail Page Styles */
 .post-detail-page {
   min-height: 100vh;
-  background-color: var(--color-bg-page);
+  background-color: var(--background-color);
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
@@ -9,7 +9,7 @@
 }
 
 .post-detail-page.dark-mode {
-  background-color: var(--color-bg-page);
+  background-color: var(--background-color);
 }
 
 .post-detail-container {

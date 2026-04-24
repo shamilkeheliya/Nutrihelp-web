@@ -1,8 +1,8 @@
 .yp-theme-page {
   min-height: 100vh;
   padding: 32px 20px 48px;
-  background: var(--color-bg-page);
-  color: var(--color-text-primary);
+  background: var(--background-color);
+  color: var(--text-primary);
 }
 
 
@@ -10,7 +10,7 @@
   margin-bottom: 16px;
   font-size: 32px;
   font-weight: 800;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
 }
 
 .yp-subtitle {
@@ -27,7 +27,7 @@
   border-radius: 16px;
   overflow: hidden;
   background: var(--background-secondary);
-  border: 1px solid var(--color-border-secondary);
+  border: 1px solid var(--border-color-secondary);
   box-shadow: var(--card-shadow);
 }
 
@@ -42,16 +42,16 @@
   max-width: 720px;
   margin: 0 auto;
   padding: 18px;
-  background: var(--card-card);
+  background: var(--card-background);
   border-radius: 18px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-color);
   box-shadow: var(--card-shadow);
 }
 
 
 .yp-group {
   padding: 14px 4px;
-  border-bottom: 1px dashed var(--color-border-secondary);
+  border-bottom: 1px dashed var(--border-color-secondary);
 }
 
 .yp-group:last-child {
@@ -62,14 +62,14 @@
   margin-bottom: 10px;
   font-size: 14px;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
 }
 
 
 .yp-pill {
   background: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-color);
   border-radius: 999px;
   padding: 8px 12px;
   margin: 6px 8px 0 0;
@@ -81,7 +81,7 @@
 
 .yp-pill:hover {
   background: var(--background-secondary);
-  border-color: var(--color-border-focus);
+  border-color: var(--border-color-focus);
 }
 
 
@@ -112,7 +112,7 @@
 .yp-redo {
   background: var(--button-background-secondary);
   color: var(--button-text-secondary);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-color);
   padding: 10px 14px;
   border-radius: 12px;
   font-weight: 700;
@@ -121,7 +121,7 @@
 
 .yp-redo:hover {
   background: var(--background-secondary);
-  border-color: var(--color-border-focus);
+  border-color: var(--border-color-focus);
 }
 
 

@@ -19,7 +19,7 @@ export default function DayRow({ dayPlan, ingredientsByRecipe }) {
           lineHeight: 1.3,
           marginTop: 20,
           color: "var(--text-heading)",
-          borderBottom: "1px solid var(--color-border)",
+          borderBottom: "1px solid var(--border-color)",
           paddingBottom: 6,
           marginBottom: 12,
         }}
@@ -44,10 +44,10 @@ export default function DayRow({ dayPlan, ingredientsByRecipe }) {
             <div
               key={mealKey}
               style={{
-                border: "1px solid var(--color-border)",
+                border: "1px solid var(--border-color)",
                 borderRadius: 10,
                 padding: 14,
-                backgroundColor: "var(--card-card-secondary)",
+                backgroundColor: "var(--card-background-secondary)",
                 boxShadow: "0 4px 8px rgba(0,0,0,0.05)",
                 minWidth: 0,
               }}
@@ -56,7 +56,7 @@ export default function DayRow({ dayPlan, ingredientsByRecipe }) {
                 className="meal-header"
                 style={{
                   margin: "4px 0 8px",
-                  color: "var(--color-primary)",
+                  color: "var(--primary-color)",
                   textDecoration: "underline",
                   fontSize: "clamp(0.875rem, 3vw, 1rem)",
                   lineHeight: 1.3,
@@ -70,7 +70,7 @@ export default function DayRow({ dayPlan, ingredientsByRecipe }) {
                 fontWeight: 700, 
                 margin: "0 0 6px", 
                 fontSize: "clamp(0.875rem, 2.5vw, 1rem)",
-                color: "var(--color-text-primary)"
+                color: "var(--text-primary)"
               }}>
                 {recipe?.recipe_name || "N/A"}
               </p>
@@ -91,7 +91,7 @@ export default function DayRow({ dayPlan, ingredientsByRecipe }) {
                   fontSize: "clamp(0.75rem, 2vw, 0.875rem)",
                   marginBottom: 6,
                   fontWeight: 600,
-                  color: "var(--color-text-primary)",
+                  color: "var(--text-primary)",
                 }}
               >
                 Ingredients:
@@ -113,8 +113,8 @@ export default function DayRow({ dayPlan, ingredientsByRecipe }) {
                           textAlign: "left",
                           padding: 4,
                           fontWeight: 600,
-                          borderBottom: "1px solid var(--color-border)",
-                          color: "var(--color-text-primary)",
+                          borderBottom: "1px solid var(--border-color)",
+                          color: "var(--text-primary)",
                         }}
                       >
                         Name
@@ -124,8 +124,8 @@ export default function DayRow({ dayPlan, ingredientsByRecipe }) {
                           textAlign: "left",
                           padding: 4,
                           fontWeight: 600,
-                          borderBottom: "1px solid var(--color-border)",
-                          color: "var(--color-text-primary)",
+                          borderBottom: "1px solid var(--border-color)",
+                          color: "var(--text-primary)",
                         }}
                       >
                         Qty
@@ -138,7 +138,7 @@ export default function DayRow({ dayPlan, ingredientsByRecipe }) {
                         <td
                           style={{
                             padding: 4,
-                            borderBottom: "1px solid var(--color-border-light)",
+                            borderBottom: "1px solid var(--border-color-light)",
                           }}
                         >
                           {getIngredientName(ing)}
@@ -146,7 +146,7 @@ export default function DayRow({ dayPlan, ingredientsByRecipe }) {
                         <td
                           style={{
                             padding: 4,
-                            borderBottom: "1px solid var(--color-border-light)",
+                            borderBottom: "1px solid var(--border-color-light)",
                           }}
                         >
                           {getIngredientQty(ing)}
