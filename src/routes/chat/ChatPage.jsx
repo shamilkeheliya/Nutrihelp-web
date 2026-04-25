@@ -85,7 +85,13 @@ export default function ChatPage() {
     }
 
     const data = await response.json();
-    return data.msg || data.message || String(data);
+    const reply = data.msg || data.message || String(data);
+
+    if (!reply || reply.trim() === "") {
+      throw new Error("Empty response from assistant");
+    }
+
+    return reply;
   }
 
   async function sendMessage(e) {
@@ -180,16 +186,16 @@ export default function ChatPage() {
       <main className="nh-app">
         <section className="nh-chatCard">
           <div className="nh-chatHeader" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-  <h2 style={{ margin: 0 }}>NutriHelp Assistant</h2>
-  <label style={{ fontSize: "0.8rem", cursor: "pointer", color: "#666", display: "flex", alignItems: "center", gap: "6px" }}>
-    <input
-      type="checkbox"
-      checked={useRag}
-      onChange={(e) => setUseRag(e.target.checked)}
-    />
-    Use knowledge base (RAG)
-  </label>
-</div>
+            <h2 style={{ margin: 0 }}>NutriHelp Assistant</h2>
+            <label style={{ fontSize: "0.8rem", cursor: "pointer", color: "#666", display: "flex", alignItems: "center", gap: "6px" }}>
+              <input
+                type="checkbox"
+                checked={useRag}
+                onChange={(e) => setUseRag(e.target.checked)}
+              />
+              Use knowledge base (RAG)
+            </label>
+          </div>
 
           <div className="nh-messages" ref={messagesRef}>
             {messages.map((m) => (
@@ -204,7 +210,9 @@ export default function ChatPage() {
             {isLoading && (
               <div className="nh-msgRow left">
                 <div className="nh-msgWrap">
-                  <div className="nh-bubble left">Typing...</div>
+                  <div className="nh-bubble left nh-typing">
+                    <span /><span /><span />
+                  </div>
                 </div>
               </div>
             )}
@@ -215,8 +223,11 @@ export default function ChatPage() {
               <textarea
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
+                onInput={(e) => {
+                  e.target.style.height = "auto";
+                  e.target.style.height = e.target.scrollHeight + "px";
+                }}
                 placeholder="Type your message here..."
-                rows={1}
                 disabled={isLoading}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
