@@ -256,6 +256,17 @@
   cursor: pointer;
 }
 
+.nh-clearBtn {
+  width: 82px;
+  height: 82px;
+  border-radius: 16px;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
 
 .nh-typing {
   display: flex;
@@ -285,4 +296,10 @@
   cursor: not-allowed;
   background-color: gray;
   color: white;
+}
+
+.nh-bubble--error {
+  background-color: #ffe5e5;
+  color: #cc0000;
+  border: 1px solid #ffaaaa;
 }

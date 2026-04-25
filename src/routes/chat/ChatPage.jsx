@@ -48,14 +48,25 @@ export default function ChatPage() {
     []
   );
 
-  const [messages, setMessages] = useState(() => [
-    {
-      id: uid(),
-      side: "left",
-      text: "Hi! I'm your NutriHelp assistant. Ask me anything about nutrition, meals, or your health goals.",
-      time: formatTime(new Date()),
-    },
-  ]);
+  const [messages, setMessages] = useState(() => {
+    try {
+      const saved = localStorage.getItem("nh-messages");
+      return saved ? JSON.parse(saved) : [
+        {
+          id: uid(),
+          side: "left",
+          text: "Hi! I'm your NutriHelp assistant. Ask me anything about nutrition, meals, or your health goals.",
+          time: formatTime(new Date()),
+        },
+      ];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("nh-messages", JSON.stringify(messages));
+  }, [messages]);
 
   useEffect(() => {
     if (messagesRef.current) {
@@ -81,14 +92,19 @@ export default function ChatPage() {
     });
 
     if (!response.ok) {
-      throw new Error(`Backend returned ${response.status}`);
+      const err = new Error("Backend error");
+      err.type = "network";
+      err.status = response.status;
+      throw err;
     }
 
     const data = await response.json();
     const reply = data.msg || data.message || String(data);
 
     if (!reply || reply.trim() === "") {
-      throw new Error("Empty response from assistant");
+      const err = new Error("Empty response");
+      err.type = "empty";
+      throw err;
     }
 
     return reply;
@@ -107,6 +123,8 @@ export default function ChatPage() {
     };
     setMessages((prev) => [...prev, userMsg]);
     setDraft("");
+    const ta = document.querySelector(".nh-inputWrap textarea");
+    if (ta) ta.style.height = "auto";
     setIsLoading(true);
 
     try {
@@ -122,18 +140,49 @@ export default function ChatPage() {
       ]);
     } catch (err) {
       console.error("Chatbot error:", err);
+
+      const errorText = err.type === "empty"
+        ? "The assistant returned an empty response. Please try again."
+        : err.type === "network"
+        ? `Connection failed (${err.status ?? "no response"}). Check your server.`
+        : "Something went wrong. Please try again.";
+
       setMessages((prev) => [
         ...prev,
         {
           id: uid(),
           side: "left",
-          text: `Sorry, I couldn't reach the assistant right now. (${err.message})`,
+          text: errorText,
           time: formatTime(new Date()),
+          isError: true,
         },
       ]);
     } finally {
       setIsLoading(false);
     }
+  }
+
+  async function clearHistory() {
+    localStorage.removeItem("nh-messages");
+    setMessages(
+      [
+        {
+          id: uid(),
+          side: "left",
+          text: "Hi! I'm your NutriHelp assistant. Ask me anything about nutrition, meals, or your health goals.",
+          time: formatTime(new Date()),
+        },
+      ]
+    );
+  }
+
+  function formatText(text) {
+    return text.split(/\*\*(.*?)\*\*/g).flatMap((part, i) => {
+      if (i % 2 === 1) return [<strong key={`b${i}`}>{part}</strong>];
+        return part.split(/\*(.*?)\*/g).map((p, j) =>
+          j % 2 === 1 ? <em key={`e${i}-${j}`}>{p}</em> : p
+        );
+    });
   }
 
   return (
@@ -201,8 +250,13 @@ export default function ChatPage() {
             {messages.map((m) => (
               <div key={m.id} className={`nh-msgRow ${m.side}`}>
                 <div className="nh-msgWrap">
-                  <div className={`nh-bubble ${m.side}`}>{m.text}</div>
+
+                  <div className={`nh-bubble ${m.side} ${m.isError ? "nh-bubble--error" : ""}`}>
+                    {formatText(m.text)}
+                  </div>
+
                   <div className={`nh-meta ${m.side}`}>{m.time}</div>
+
                 </div>
               </div>
             ))}
@@ -210,15 +264,30 @@ export default function ChatPage() {
             {isLoading && (
               <div className="nh-msgRow left">
                 <div className="nh-msgWrap">
+
                   <div className="nh-bubble left nh-typing">
                     <span /><span /><span />
                   </div>
+
+                  <div className="nh-meta left" style={{ marginTop: "4px", fontStyle: "italic" }}>
+                    Thinking...
+                  </div>
+
                 </div>
               </div>
             )}
           </div>
 
           <form className="nh-composer" onSubmit={sendMessage}>
+
+            <button 
+              className="nh-clearBtn"
+              disabled={isLoading}
+              onClick={clearHistory}
+            >
+              Clear History
+            </button>
+
             <div className="nh-inputWrap">
               <textarea
                 value={draft}
